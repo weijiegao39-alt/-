@@ -32,7 +32,117 @@ function clone(x){return JSON.parse(JSON.stringify(x))}function save(){localStor
 function init(){Object.entries(OPT).forEach(([k,v])=>{let l=document.createElement('label');l.textContent={sleep:'睡眠',watch:'看盘',research:'研究',ai:'AI依赖',desire:'欲望',shadow:'旧照/幻想',sport:'运动',care:'护肤/眼睛'}[k];let s=document.createElement('select');s.id=k;v.forEach(x=>s.add(new Option(x,x)));l.appendChild(s);$('#dailyForm').appendChild(l)});Object.keys(WEATHER).forEach(x=>weather.add(new Option(x,x)));Object.keys(MAPS).forEach(x=>mapSel.add(new Option(x,x)));weather.onchange=()=>{S.weather=weather.value;render();save()};mapSel.onchange=()=>{S.map=mapSel.value;render();save()};render()}
 function render(){let r=rank(),st=assetStage(),rpPct=(S.rp-r[1])/(r[2]-r[1])*100,assetPct=(S.asset-st[1])/(st[2]-st[1])*100;$('#rank').textContent=r[0];$('#title').textContent=S.title;$('#dateLine').textContent=today();$('#age').textContent=age();$('#rp').textContent=`${S.rp}/${r[2]==999999?'∞':r[2]}`;$('#coins').textContent=S.coins;$('#asset').textContent='¥'+fmt(S.asset);$('#gap').textContent=st[0]=='A10'?'已封顶':'¥'+fmt(st[2]-S.asset);$('#weight').textContent=S.weight+'kg';$('#stable').textContent=S.stable+'/100';$('#sv').textContent=S.sv+'/100';$('#assetText').textContent=`资产阶段：${st[0]}｜${st[0]=='A10'?'终局阶段':'下一阶段进度'}`;$('#assetBar').style.width=Math.max(0,Math.min(100,assetPct))+'%';$('#rpText').textContent=`境界进度：${r[0]} ${Math.max(0,Math.min(100,rpPct)).toFixed(0)}%`;$('#rpBar').style.width=Math.max(0,Math.min(100,rpPct))+'%';$('#nightText').textContent=`夜潮印记 ${S.night}/7｜保底 ${S.pity}/3｜回响碎片 ${S.inv['回响碎片']||0}`;$('#nightBar').style.width=Math.min(100,S.night/7*100)+'%';$('#gate').textContent=Date.now()<S.freeze?'强门禁冻结中：禁止加仓/浪花账/旅行':'强门禁：未开启';$('#gate').className='ok gate '+(Date.now()<S.freeze?'bad':'');weather.value=S.weather;mapSel.value=S.map;$('#mapDesc').textContent=MAPS[S.map][1]+' 天气：'+WEATHER[S.weather];$('#chaos').textContent=S.chaos[0];$('#chaosD').textContent=S.chaos[1];$('#maps').innerHTML=Object.keys(MAPS).map(k=>`<div class="mapcard ${S.map==k?'active':''}" onclick="pushUndo('地图切换');S.map='${k}';log('【地图切换】进入${k}')"><h3>${k}</h3><div class="meta">${MAPS[k][0]}</div><p>${MAPS[k][1]}</p></div>`).join('');renderBoss()}function renderBoss(){let html=Object.entries(S.boss).map(([k,v])=>`<div class="item"><h3>${k}</h3><div class="meta">HP ${v}/100</div><div class="bar ${k=='旧日幻影'?'purple':'red'}"><i style="width:${v}%"></i></div><p>${bossDesc(k)}</p><button onclick="pushUndo('压制${k}');S.boss['${k}']=Math.max(0,S.boss['${k}']-10);log('【Boss压制】${k}-10HP')">压制</button></div>`).join('');$('#bossMini').innerHTML=html;$('#bossGrid').innerHTML=html}function bossDesc(k){return {'市场先生':'防满仓梭哈、追涨杀跌、情绪交易。','伪研究员':'防只看盘、不输出、AI替代思考。','欲望魔神':'防深夜幻想、频繁🦌、即时满足。','旧日幻影':'防旧照片、AI幻境、时间迷宫。'}[k]}
 function act(a){pushUndo('快捷动作：'+a);if(a==='research'){S.rp+=5;S.coins+=3;S.boss['伪研究员']=Math.max(0,S.boss['伪研究员']-20);S.sv=Math.max(0,S.sv-3);log('【研究输出】+5RP｜伪研究员-20HP')}if(a==='data'){S.rp+=4;S.data++;log('【数据更新】+4RP｜数据库+1')}if(a==='sport'){S.rp+=3;S.sv=Math.max(0,S.sv-5);log('【运动】+3RP｜SV-5')}if(a==='skin'){S.rp+=1;S.night++;nightCheck();log('【护肤】夜潮+1')}if(a==='sleep'){S.rp+=3;S.night++;S.todaySleep=true;nightCheck();log('【熄屏】+3RP｜夜潮+1')}if(a==='anchor'){S.sv=Math.max(0,S.sv-5);S.stable=Math.min(100,S.stable+3);S.boss['旧日幻影']=Math.max(0,S.boss['旧日幻影']-10);log('【现实锚定】SV-5｜稳定+3')}if(a==='red'){S.rp=Math.max(0,S.rp-8);S.freeze=Date.now()+864e5;S.boss['市场先生']=100;log('【市场红色】市场先生降临，强门禁24h')}if(a==='shadow'){S.rp=Math.max(0,S.rp-2);S.sv=Math.min(100,S.sv+5);S.boss['旧日幻影']=Math.min(100,S.boss['旧日幻影']+12);log('【旧日幻影攻击】RP-2｜SV+5')}if(a==='ai'){S.rp=Math.max(0,S.rp-10);S.boss['伪研究员']=Math.min(100,S.boss['伪研究员']+20);log('【AI依赖】RP-10｜伪研究员增强')}if(a==='review'){S.freeze=0;S.rp+=5;S.boss['市场先生']=Math.max(0,S.boss['市场先生']-25);log('【红色复盘】门禁解除｜RP+5')}save();render()}function nightCheck(){if(S.night>=7){S.night=0;let d=rand(['旅行碎片','社交通行证']);S.inv[d]=(S.inv[d]||0)+1;showDrop('夜潮净化',d+' x1');log('【夜潮净化】掉落：'+d)}}function showDrop(t,txt){$('#dropTitle').textContent=t;$('#dropText').textContent=txt;$('#drop').classList.add('show')}
-function settle(){pushUndo('日报结算');let add=0,L=[],studyMin=+study.value;if(sleep.value.startsWith('优')){add+=3;S.night++;L.push('睡眠优')}else if(sleep.value.startsWith('良')){add+=1;L.push('睡眠良')}else{add-=3;S.poll=Math.min(100,S.poll+5);L.push('睡眠差')}if(watch.value.startsWith('优')){add+=3;S.boss['市场先生']=Math.max(0,S.boss['市场先生']-8);L.push('看盘优')}else if(watch.value.startsWith('差')){add-=5;L.push('看盘过久')}else if(watch.value.startsWith('红色')){S.freeze=Date.now()+864e5;S.boss['市场先生']=100;add-=8;L.push('市场先生降临')}if(research.value.startsWith('优')){add+=5;S.boss['伪研究员']=Math.max(0,S.boss['伪研究员']-20);L.push('研究输出')}else if(research.value.startsWith('良'))add+=2;else add-=5;if(ai.value.startsWith('优'))add+=5;else if(ai.value.startsWith('差'))add-=10;if(desire.value.startsWith('优'))add+=5;else if(desire.value.startsWith('差'))add-=5;if(shadow.value.includes('旧照片'))S.sv+=3;if(shadow.value.includes('AI')||shadow.value.includes('幻想'))S.sv+=5;if(sport.value.includes('30')){add+=3;S.sv=Math.max(0,S.sv-5)}if(sport.value.includes('60')){add+=5;S.sv=Math.max(0,S.sv-8)}if(care.value!='无'){add+=1;S.night++}if(studyMin>=90)S.sv=Math.max(0,S.sv-8);else if(studyMin>=30)S.sv=Math.max(0,S.sv-3);S.rp=Math.max(0,S.rp+add);let coin=Math.max(0,Math.floor(add/2));S.coins+=coin;S.stable=Math.max(0,Math.min(100,S.stable+(add>0?2:-3)));log(`【地下城日结】进入《${S.map}》\n- ${L.join('\n- ')}\n备注：${note.value}\n合计：RP ${add>=0?'+':''}${add}｜旅币+${coin}`);note.value='';if(S.pity>=3&&studyMin>=10)drop(true);else if(Math.random()<.25)drop(false);else S.pity++;nightCheck();save();render()}function drop(force){let d=force?rand(['旅行碎片','开图碎片']):rand(['旅币+2','旅行碎片','社交通行证','神秘钥匙']);if(d=='旅币+2')S.coins+=2;else S.inv[d]=(S.inv[d]||0)+1;S.pity=0;showDrop(force?'保底大爆':'随机掉落',d);log('【掉落】'+d)}function reroll(){pushUndo('重抽混沌因子');S.chaos=rand(CHAOS);log('【混沌因子】'+S.chaos[0])}function assetUpdate(){pushUndo('资产更新');let old=S.asset,v=prompt('输入当前总资产',S.asset);if(v!==null&&v!==''){S.asset=+v;let diff=S.asset-old;log(`【资产更新】¥${fmt(old)} → ¥${fmt(S.asset)}｜变动 ${diff>=0?'+':''}¥${fmt(diff)}`)}}function setWeight(){pushUndo('体重更新');let v=prompt('输入体重kg',S.weight);if(v!==null&&v!==''){S.weight=+v;if(S.weight<=77&&!S.ach.includes('77kg破界')){S.rp+=10;S.ach.push('77kg破界')}if(S.weight<=75&&!S.ach.includes('75kg轻身')){S.rp+=20;S.ach.push('75kg轻身')}if(S.weight<=72&&!S.ach.includes('旅行者·轻身')){S.rp+=50;S.title='旅行者·轻身';S.ach.push('旅行者·轻身')}log('【体重更新】'+S.weight+'kg')}}function showBag(){moreBox.textContent=JSON.stringify(S.inv,null,2)}function showLog(){moreBox.textContent=S.logs.slice(-120).join('\n')}function showAch(){moreBox.textContent=S.ach.join('\n')||'暂无成就'}function showShop(){moreBox.textContent=SHOP.map(x=>`${x[0]}｜${x[1]}旅币`).join('\n')}function showTravel(){moreBox.textContent=TRAVEL.map(x=>`${x[0]}｜${x[1]}旅行碎片`).join('\n')}function resetConfirm(){if(confirm('确认清空本地存档？')){localStorage.removeItem('traveler36');location.reload()}}function makeBounty(){let obj={生日:'2002-12-25',性别:'男',年龄:age(),日期:today(),称号:S.title,境界:rank()[0],RP:S.rp,资产:S.asset,体重:S.weight,稳定度:S.stable,幻影值SV:S.sv,夜潮:S.night+'/7',地图:S.map,天气:S.weather,混沌因子:S.chaos[0],Boss:S.boss,背包:S.inv,今日精力:energy.value,可用时间:time.value,主风险:risk.value,场景:scene.value,说明:bnote.value,请求:'请为我发布今日具体任务悬赏：主线、支线、限时、禁止事项、奖励、惩罚、Boss攻击、地图剧情、最低保底。围绕投资研究、减脂、控欲、睡眠、看盘纪律。'};bout.textContent='【旅行者3.6｜今日任务悬赏请求】\n'+JSON.stringify(obj,null,2)}async function copyBounty(){try{await navigator.clipboard.writeText(bout.textContent);toast('已复制')}catch(e){toast('复制失败，手动长按复制')}}init();
+function settle(){pushUndo('日报结算');let add=0,L=[],studyMin=+study.value;if(sleep.value.startsWith('优')){add+=3;S.night++;L.push('睡眠优')}else if(sleep.value.startsWith('良')){add+=1;L.push('睡眠良')}else{add-=3;S.poll=Math.min(100,S.poll+5);L.push('睡眠差')}if(watch.value.startsWith('优')){add+=3;S.boss['市场先生']=Math.max(0,S.boss['市场先生']-8);L.push('看盘优')}else if(watch.value.startsWith('差')){add-=5;L.push('看盘过久')}else if(watch.value.startsWith('红色')){S.freeze=Date.now()+864e5;S.boss['市场先生']=100;add-=8;L.push('市场先生降临')}if(research.value.startsWith('优')){add+=5;S.boss['伪研究员']=Math.max(0,S.boss['伪研究员']-20);L.push('研究输出')}else if(research.value.startsWith('良'))add+=2;else add-=5;if(ai.value.startsWith('优'))add+=5;else if(ai.value.startsWith('差'))add-=10;if(desire.value.startsWith('优'))add+=5;else if(desire.value.startsWith('差'))add-=5;if(shadow.value.includes('旧照片'))S.sv+=3;if(shadow.value.includes('AI')||shadow.value.includes('幻想'))S.sv+=5;if(sport.value.includes('30')){add+=3;S.sv=Math.max(0,S.sv-5)}if(sport.value.includes('60')){add+=5;S.sv=Math.max(0,S.sv-8)}if(care.value!='无'){add+=1;S.night++}if(studyMin>=90)S.sv=Math.max(0,S.sv-8);else if(studyMin>=30)S.sv=Math.max(0,S.sv-3);S.rp=Math.max(0,S.rp+add);let coin=Math.max(0,Math.floor(add/2));S.coins+=coin;S.stable=Math.max(0,Math.min(100,S.stable+(add>0?2:-3)));log(`【地下城日结】进入《${S.map}》\n- ${L.join('\n- ')}\n备注：${note.value}\n合计：RP ${add>=0?'+':''}${add}｜旅币+${coin}`);note.value='';if(S.pity>=3&&studyMin>=10)drop(true);else if(Math.random()<.25)drop(false);else S.pity++;nightCheck();save();render()}function drop(force){let d=force?rand(['旅行碎片','开图碎片']):rand(['旅币+2','旅行碎片','社交通行证','神秘钥匙']);if(d=='旅币+2')S.coins+=2;else S.inv[d]=(S.inv[d]||0)+1;S.pity=0;showDrop(force?'保底大爆':'随机掉落',d);log('【掉落】'+d)}function reroll(){pushUndo('重抽混沌因子');S.chaos=rand(CHAOS);log('【混沌因子】'+S.chaos[0])}function assetUpdate(){pushUndo('资产更新');let old=S.asset,v=prompt('输入当前总资产',S.asset);if(v!==null&&v!==''){S.asset=+v;let diff=S.asset-old;log(`【资产更新】¥${fmt(old)} → ¥${fmt(S.asset)}｜变动 ${diff>=0?'+':''}¥${fmt(diff)}`)}}function setWeight(){pushUndo('体重更新');let v=prompt('输入体重kg',S.weight);if(v!==null&&v!==''){S.weight=+v;if(S.weight<=77&&!S.ach.includes('77kg破界')){S.rp+=10;S.ach.push('77kg破界')}if(S.weight<=75&&!S.ach.includes('75kg轻身')){S.rp+=20;S.ach.push('75kg轻身')}if(S.weight<=72&&!S.ach.includes('旅行者·轻身')){S.rp+=50;S.title='旅行者·轻身';S.ach.push('旅行者·轻身')}log('【体重更新】'+S.weight+'kg')}}function showBag(){moreBox.textContent=JSON.stringify(S.inv,null,2)}function showLog(){moreBox.textContent=S.logs.slice(-120).join('\n')}function showAch(){moreBox.textContent=S.ach.join('\n')||'暂无成就'}function showShop(){moreBox.textContent=SHOP.map(x=>`${x[0]}｜${x[1]}旅币`).join('\n')}function showTravel(){moreBox.textContent=TRAVEL.map(x=>`${x[0]}｜${x[1]}旅行碎片`).join('\n')}function resetConfirm(){if(confirm('确认清空本地存档？')){localStorage.removeItem('traveler36');location.reload()}}function makeBounty(){let obj={生日:'2002-12-25',性别:'男',年龄:age(),日期:today(),称号:S.title,境界:rank()[0],RP:S.rp,资产:S.asset,体重:S.weight,稳定度:S.stable,幻影值SV:S.sv,夜潮:S.night+'/7',地图:S.map,天气:S.weather,混沌因子:S.chaos[0],Boss:S.boss,背包:S.inv,今日精力:energy.value,可用时间:time.value,主风险:risk.value,场景:scene.value,说明:bnote.value,请求:'请为我发布今日具体任务悬赏：主线、支线、限时、禁止事项、奖励、惩罚、Boss攻击、地图剧情、最低保底。围绕投资研究、减脂、控欲、睡眠、看盘纪律。'};bout.textContent='【旅行者3.6｜今日任务悬赏请求】\n'+JSON.stringify(obj,null,2)}async function copyBounty(){try{await navigator.clipboard.writeText(bout.textContent);toast('已复制')}catch(e){toast('复制失败，手动长按复制')}}<script>
+/* 旅行者3.7｜盈利阶段重构补丁：粘贴到 index.html 里 init(); 上方 */
+(function(){
+  if(!S) return;
+  S.version = 37;
+  S.asset = Number(S.asset || 1050000);
+  S.principal = Number(S.principal || 650000);
+  S.title = S.title || "资本旅者";
+  S.rp = Math.max(Number(S.rp || 0), 174);
+  S.coins = Math.max(Number(S.coins || 0), 120);
+  S.ach = S.ach || [];
+  S.inv = S.inv || {};
+  S.logs = S.logs || [];
+
+  if(!S.ach.includes("盈利40万")) S.ach.push("盈利40万");
+
+  window.profit = function(){
+    return Math.max(0, Number(S.asset || 0) - Number(S.principal || 0));
+  };
+
+  window.assetStage = function(){
+    const p = profit();
+    if(p >= 5000000) return ["P10 盈利500万",5000000,10000000];
+    if(p >= 2000000) return ["P9 盈利200万",2000000,5000000];
+    if(p >= 1000000) return ["P8 盈利100万",1000000,2000000];
+    if(p >= 800000) return ["P7 盈利80万",800000,1000000];
+    if(p >= 600000) return ["P6 盈利60万",600000,800000];
+    if(p >= 400000) return ["P5 盈利40万",400000,600000];
+    if(p >= 200000) return ["P4 盈利20万",200000,400000];
+    if(p >= 100000) return ["P3 盈利10万",100000,200000];
+    return ["P2 盈利积累期",0,100000];
+  };
+
+  window.assetUpdate = function(){
+    if(typeof pushUndo === "function") pushUndo("资产/本金更新");
+    const oldAsset = Number(S.asset || 0);
+    const oldPrincipal = Number(S.principal || 0);
+    const newAsset = prompt("输入当前总资产", oldAsset);
+    if(newAsset === null) return;
+    const newPrincipal = prompt("输入当前本金/累计投入", oldPrincipal);
+    if(newPrincipal === null) return;
+    S.asset = Number(newAsset || 0);
+    S.principal = Number(newPrincipal || 0);
+    const p = profit();
+    log(`【资产更新】总资产 ¥${fmt(oldAsset)} → ¥${fmt(S.asset)}｜本金 ¥${fmt(S.principal)}｜盈利约 ¥${fmt(p)}`);
+    if(p >= 1000000 && !S.ach.includes("盈利百万")){
+      S.ach.push("盈利百万");
+      S.coins = (S.coins || 0) + 300;
+      S.inv["旅行碎片"] = (S.inv["旅行碎片"] || 0) + 10;
+      log("【盈利百万】解锁：旅币+300｜旅行碎片+10");
+    }
+    save();
+    render();
+  };
+
+  const oldRender37 = window.render;
+  window.render = function(){
+    oldRender37();
+    const p = profit();
+    const st = assetStage();
+
+    // 替换首页资产显示逻辑：总资产、本金、盈利、距下阶段
+    const assetBox = document.getElementById("asset");
+    if(assetBox) assetBox.textContent = "¥" + fmt(S.asset);
+
+    let principalBox = document.getElementById("principal");
+    if(!principalBox){
+      const grid = document.querySelector(".hero .grid") || document.querySelector(".grid");
+      if(grid){
+        const div = document.createElement("div");
+        div.className = "stat";
+        div.innerHTML = '<span>本金/投入</span><b id="principal"></b>';
+        grid.appendChild(div);
+        principalBox = document.getElementById("principal");
+      }
+    }
+    if(principalBox) principalBox.textContent = "¥" + fmt(S.principal);
+
+    let profitBox = document.getElementById("profit");
+    if(!profitBox){
+      const grid = document.querySelector(".hero .grid") || document.querySelector(".grid");
+      if(grid){
+        const div = document.createElement("div");
+        div.className = "stat";
+        div.innerHTML = '<span>当前盈利</span><b id="profit"></b>';
+        grid.appendChild(div);
+        profitBox = document.getElementById("profit");
+      }
+    }
+    if(profitBox) profitBox.textContent = "¥" + fmt(p);
+
+    const gapEl = document.getElementById("gap") || document.getElementById("assetGap") || document.getElementById("nextAsset");
+    if(gapEl) gapEl.textContent = st[0].includes("P10") ? "至盈利1000万" : "¥" + fmt(st[2] - p);
+
+    const assetText = document.getElementById("assetText") || document.getElementById("a7Text");
+    if(assetText) assetText.textContent = `盈利阶段：${st[0]}｜下一阶段进度`;
+
+    const assetBar = document.getElementById("assetBar") || document.getElementById("a7bar");
+    if(assetBar){
+      const pct = Math.max(0, Math.min(100, (p - st[1]) / (st[2] - st[1]) * 100));
+      assetBar.style.width = pct + "%";
+    }
+  };
+
+  if(!S.logs.some(x=>String(x).includes("旅行者3.7"))){
+    S.logs.push("【系统升级】旅行者3.7：资产系统改为盈利阶段，本金/投入字段已启用。当前总资产105万，本金约65万，盈利约40万。");
+  }
+  localStorage.setItem("traveler36", JSON.stringify(S));
+  localStorage.setItem("traveler37", JSON.stringify(S));
+})();
+</script>init();
 </script>
 </body>
 </html>
