@@ -1,0 +1,176 @@
+<!doctype html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="theme-color" content="#07111f"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-title" content="旅行者4.4"><title>旅行者4.4</title>
+<style>
+:root{--bg:#07111f;--card:#111b2d;--card2:#07101d;--line:#24344d;--text:#e5e7eb;--muted:#94a3b8;--g:#34d399;--b:#38bdf8;--r:#fb7185;--y:#facc15;--p:#a78bfa}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}body{margin:0;background:linear-gradient(180deg,#07111f,#020617);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Microsoft YaHei",Arial,sans-serif;padding-bottom:92px}header{position:sticky;top:0;z-index:20;background:rgba(7,17,31,.94);backdrop-filter:blur(16px);border-bottom:1px solid var(--line);padding:14px}h1{margin:0;font-size:22px}h2{margin:0 0 12px;font-size:18px}h3{margin:0 0 6px;font-size:16px}p{line-height:1.55}.sub{color:var(--muted);font-size:12px;margin-top:3px}main{max-width:900px;margin:auto;padding:12px}.page{display:none;gap:12px}.page.active{display:grid}.card{background:linear-gradient(180deg,rgba(17,27,45,.98),rgba(7,16,29,.98));border:1px solid var(--line);border-radius:22px;padding:15px;box-shadow:0 10px 28px rgba(0,0,0,.22)}.hero{background:radial-gradient(circle at 85% 10%,rgba(56,189,248,.28),transparent 34%),linear-gradient(180deg,#13213a,#07101d)}.row{display:flex;justify-content:space-between;align-items:center;gap:10px}.right{text-align:right}.muted{color:var(--muted);font-size:13px}.rank{font-size:30px;font-weight:950}.grid{display:grid;grid-template-columns:1fr 1fr;gap:9px}.stat{background:rgba(2,6,23,.78);border:1px solid var(--line);border-radius:16px;padding:11px}.stat span{display:block;color:var(--muted);font-size:12px}.stat b{display:block;margin-top:5px;font-size:17px}.bar{height:11px;background:#020617;border:1px solid #263348;border-radius:999px;overflow:hidden;margin:7px 0}.bar i{display:block;height:100%;width:0;background:linear-gradient(90deg,#059669,#34d399);transition:.35s}.yellow i{background:linear-gradient(90deg,#ca8a04,#facc15)}.purple i{background:linear-gradient(90deg,#6d28d9,#a78bfa)}.red i{background:linear-gradient(90deg,#be123c,#fb7185)}
+button,select,input,textarea{font:inherit}button{border:0;border-radius:14px;background:#1f2937;color:white;padding:11px 13px;font-weight:800;min-height:43px}button:active{transform:scale(.98)}.primary{background:linear-gradient(135deg,#047857,#10b981);width:100%;margin-top:10px}.danger{background:#7f1d1d}select,input,textarea{width:100%;background:#020617;color:white;border:1px solid #334155;border-radius:13px;padding:11px;margin-top:6px;min-height:44px}textarea{min-height:92px}.ok{border:1px solid rgba(52,211,153,.28);background:rgba(5,150,105,.08);border-radius:15px;padding:11px;line-height:1.55}.warn{border:1px solid rgba(251,113,133,.35);background:rgba(127,29,29,.22);color:#fecdd3;border-radius:15px;padding:11px;line-height:1.55}.apps{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}.app{background:#08111f;border:1px solid var(--line);border-radius:18px;padding:10px;text-align:center;min-height:78px}.app .ico{font-size:24px}.app div:last-child{font-size:12px;color:var(--muted);margin-top:4px}.task,.record,.item,.npc{background:#08111f;border:1px solid var(--line);border-radius:18px;padding:13px;margin:8px 0}.task.done{opacity:.65;border-color:#14532d}.meta{color:var(--y);font-size:13px;margin:5px 0}.npc{display:flex;gap:12px}.avatar{width:54px;height:54px;border-radius:16px;background:linear-gradient(135deg,#1d4ed8,#7c3aed);display:flex;align-items:center;justify-content:center;font-size:26px;flex:0 0 auto}pre{white-space:pre-wrap;background:#020617;border:1px solid var(--line);border-radius:15px;padding:12px;max-height:460px;overflow:auto;font-size:13px;line-height:1.55}.bottom{position:fixed;left:0;right:0;bottom:0;z-index:30;background:rgba(7,17,31,.96);backdrop-filter:blur(18px);border-top:1px solid var(--line);display:grid;grid-template-columns:repeat(5,1fr);padding:8px 8px calc(8px + env(safe-area-inset-bottom))}.bottom button{background:transparent;color:#cbd5e1;border-radius:13px;font-size:12px;padding:7px 2px;min-height:50px}.bottom button.active{background:#12332c;color:#fff}.bottom span{display:block;font-size:20px}.toast{position:fixed;left:50%;bottom:92px;transform:translateX(-50%);background:#020617;border:1px solid var(--line);border-radius:16px;padding:13px;z-index:50}.hide{display:none}.drop{position:fixed;inset:0;background:#000b;display:none;align-items:center;justify-content:center;z-index:60;padding:20px}.drop.show{display:flex}.dropbox{background:linear-gradient(180deg,#111827,#020617);border:1px solid var(--y);border-radius:22px;padding:22px;text-align:center;max-width:340px}.stars{color:var(--y);font-size:28px}@media(min-width:780px){.cards{display:grid;grid-template-columns:1fr 1fr;gap:10px}.bottom{max-width:680px;left:50%;transform:translateX(-50%);border:1px solid var(--line);border-bottom:0;border-radius:20px 20px 0 0}}@media(max-width:560px){.grid{grid-template-columns:1fr 1fr}.apps{grid-template-columns:repeat(4,1fr)}.app{padding:8px;min-height:74px}.app .ico{font-size:22px}}
+</style></head><body><header><h1>旅行者4.4</h1><div class="sub">动态小程序版｜日报档案 · NPC · 任务卡 · 随机事件</div></header><main>
+<section id="home" class="page active"><div class="card hero"><div class="row"><div><div class="muted">当前境界</div><div id="rank" class="rank"></div></div><div class="right"><div class="muted" id="dateLine"></div><b id="title"></b></div></div><div class="grid"><div class="stat"><span>RP</span><b id="rp"></b></div><div class="stat"><span>盈利阶段</span><b id="profitStageName"></b></div><div class="stat"><span>本周欲望</span><b id="weekDesire"></b></div><div class="stat"><span>本周研究</span><b id="weekResearch"></b></div></div><p class="muted" id="rpText"></p><div class="bar"><i id="rpBar"></i></div><p class="muted" id="profitText"></p><div class="bar yellow"><i id="profitBar"></i></div><p class="muted" id="svText"></p><div class="bar purple"><i id="svBar"></i></div></div><div class="card"><h2>主城功能</h2><div class="apps"><div class="app" onclick="go('daily')"><div class="ico">📝</div><b>日报</b><div>每日结算</div></div><div class="app" onclick="go('records')"><div class="ico">📅</div><b>档案</b><div>日期记录</div></div><div class="app" onclick="go('tasks')"><div class="ico">🎯</div><b>任务</b><div>任务卡</div></div><div class="app" onclick="go('events')"><div class="ico">🎲</div><b>事件</b><div>随机选择</div></div><div class="app" onclick="go('npc')"><div class="ico">🧙</div><b>NPC</b><div>角色顾问</div></div><div class="app" onclick="go('boss')"><div class="ico">👹</div><b>Boss</b><div>伤害规则</div></div><div class="app" onclick="go('asset')"><div class="ico">💰</div><b>资产</b><div>盈利阶段</div></div><div class="app" onclick="go('bounty')"><div class="ico">🤖</div><b>GPT</b><div>悬赏接口</div></div><div class="app" onclick="go('more')"><div class="ico">☰</div><b>更多</b><div>仓库设置</div></div></div></div><div class="card"><h2>今日简报</h2><div class="grid"><div class="stat"><span>SV</span><b id="sv"></b></div><div class="stat"><span>夜潮</span><b id="nightSmall"></b></div><div class="stat"><span>体重</span><b id="weight"></b></div><div class="stat"><span>稳定度</span><b id="stable"></b></div></div><div id="gate" class="ok" style="margin-top:10px"></div></div></section>
+<section id="daily" class="page"><div class="card"><h2>日报结算</h2><div class="ok">正式入口：每日欲望、研究、看盘、SV、Boss变化都会写进“档案”。</div><div class="grid" id="dailyForm"></div><label>研究/学习分钟<input id="study" type="number" value="0" min="0"></label><label>研究输出摘要<textarea id="researchNote" placeholder="今天研究了什么？有没有300字输出？"></textarea></label><label>欲望/幻想备注<textarea id="desireNote" placeholder="几次？有没有旧照/AI改图/幻想？"></textarea></label><label>其他备注<textarea id="note" placeholder="身体、看盘、情绪、现实关系。"></textarea></label><button class="primary" onclick="settle()">结算并写入档案</button><button class="danger" onclick="undoLast()" style="width:100%;margin-top:8px">↩ 撤销上一步</button></div></section>
+<section id="records" class="page"><div class="card"><h2>日期档案</h2><div class="grid"><div class="stat"><span>累计日报</span><b id="totalDays"></b></div><div class="stat"><span>本周欲望</span><b id="rWeekDesire"></b></div><div class="stat"><span>本周研究输出</span><b id="rWeekResearch"></b></div><div class="stat"><span>本周研究分钟</span><b id="rWeekStudy"></b></div></div><div id="recordList"></div><button onclick="weeklyReview()" class="primary">生成周结算</button></div></section>
+<section id="tasks" class="page"><div class="card"><h2>今日任务卡</h2><div class="warn">快捷键改成任务卡：完成才给奖励。正式结算仍以日报为准。</div><div id="taskList"></div><button onclick="refreshTasks()" class="primary">按当前状态刷新任务</button></div></section>
+
+<section id="events" class="page">
+  <div class="card">
+    <h2>随机事件</h2>
+    <div class="ok">每天可以抽一个事件。事件不是为了“好玩”，而是模拟现实里的诱惑、机会、冲动和选择。</div>
+    <div id="eventBox" class="item"></div>
+    <div id="eventChoices"></div>
+    <button onclick="rollEvent()" class="primary">抽取/刷新今日事件</button>
+  </div>
+</section>
+
+<section id="npc" class="page"><div class="card"><h2>中枢城NPC</h2><div id="npcList"></div></div></section>
+<section id="boss" class="page"><div class="card"><h2>Boss大厅</h2><div id="bossGrid"></div></div></section>
+<section id="asset" class="page"><div class="card"><h2>资产线</h2><div class="grid"><div class="stat"><span>总资产</span><b id="asset"></b></div><div class="stat"><span>本金/投入</span><b id="principal"></b></div><div class="stat"><span>当前盈利</span><b id="profit"></b></div><div class="stat"><span>距下阶段</span><b id="gap"></b></div></div><button onclick="assetUpdate()" class="primary">更新资产/本金</button></div></section>
+<section id="bounty" class="page"><div class="card"><h2>GPT悬赏接口</h2><div class="grid"><label>精力<select id="energy"><option>低</option><option selected>中</option><option>高</option></select></label><label>时间<select id="time"><option>30分钟</option><option selected>1小时</option><option>2小时</option><option>3小时以上</option></select></label><label>风险<select id="risk"><option>赖床</option><option>看盘上头</option><option selected>欲望/幻想</option><option>拖延</option><option>暴食</option><option>情绪低落</option></select></label><label>场景<select id="scene"><option>在家</option><option selected>商场/上班</option><option>学校</option><option>外出</option><option>独处夜晚</option></select></label></div><label>额外说明<textarea id="bnote"></textarea></label><button class="primary" onclick="makeBounty()">生成悬赏请求</button><pre id="bout"></pre><button onclick="copyBounty()">复制给GPT</button></div></section>
+<section id="more" class="page"><div class="card"><h2>更多</h2><div class="grid"><button onclick="showBag()">🎒 仓库</button><button onclick="showLog()">📜 日志</button><button onclick="showStats()">📊 统计</button><button onclick="showShop()">🌊 浪花账</button><button onclick="showTravel()">🚄 驿站</button><button onclick="showAch()">🏆 成就</button><button onclick="setWeight()">⚖️ 体重</button><button onclick="exportSave()">📤 导出</button><button onclick="importSave()">📥 导入</button><button onclick="resetConfirm()">♻️ 重置</button></div><pre id="moreBox"></pre></div></section>
+</main><nav class="bottom"><button class="bn active" onclick="go('home')"><span>🏠</span>主城</button><button class="bn" onclick="go('daily')"><span>📝</span>日报</button><button class="bn" onclick="go('records')"><span>📅</span>档案</button><button class="bn" onclick="go('tasks')"><span>🎯</span>任务</button><button class="bn" onclick="go('more')"><span>☰</span>更多</button></nav><div id="toast" class="toast hide"></div><div id="drop" class="drop" onclick="this.classList.remove('show')"><div class="dropbox"><div class="stars">★★★★★</div><h2 id="dropTitle">掉落</h2><p id="dropText"></p><button>确认</button></div></div>
+<script>
+const $=q=>document.querySelector(q),$$=q=>[...document.querySelectorAll(q)],fmt=n=>Number(n||0).toLocaleString("zh-CN"),rand=a=>a[Math.floor(Math.random()*a.length)];
+const RANKS=[["行者",0,99],["勇士",100,199],["先驱",200,299],["礁石",300,399],["先知",400,999999]];
+const OPT={sleep:["优：00:30前 +3RP","良：01:30前 +1RP","差：01:30后 -3RP"],watch:["优：≤2h +3RP","良：2-4h 0RP","差：>4h -5RP","红色：>6h 市场先生降临"],research:["优：输出300字以上 +5RP","良：只阅读 +2RP","差：只看盘不研究 -5RP"],ai:["优：AI辅助但自己理解 +5RP","良：AI完成50% 0RP","差：AI完成90%且讲不出 -10RP"],desire:["0次","1次","2次","3次","4次及以上"],shadow:["无","看旧照片 +3SV","AI修改/生成照片 +5SV","幻想超过15分钟 +5SV"],sport:["无","运动30分钟 +3RP","运动60分钟 +5RP"],care:["无","护肤","眼睛保护","护肤+眼睛保护"]};
+const NPC=[["🧙","档案官·赫尔墨","保存日报、周报、失败复盘。","每天结算后自动更新档案。"],["⚔️","纪律骑士·阿斯特","管理市场先生与强门禁。","看盘>6h会触发封锁。"],["📚","匠铺导师·格雷","训练研究输出和买方能力。","300字输出攻击伪研究员。"],["🌙","夜潮医师·澄","负责皮肤、睡眠、夜潮印记。","护肤/熄屏给夜潮充能。"],["🌫️","旧日看守·夏影","管理旧照、怀旧、AI幻境。","防止扩建幻想世界。"],["🏃","熔炉教官·赤岩","负责减脂和运动。","运动降低SV。"],["💰","星港司库·岚","负责盈利阶段和本金。","看盈利，不看总资产幻觉。"],["🧭","远行向导·南星","负责社交、旅行、现实连接。","旅行由主线开启。"]];
+function defaultState(){return{version:"4.4",rp:0,coins:20,asset:1050000,principal:750000,title:"初级资本旅者",stable:70,sv:0,night:0,pity:0,freeze:0,weight:78,data:0,undo:[],dailyRecords:[],quickRecords:[],weeklyReviews:[],tasks:[],inv:{"旅行碎片":0,"开图碎片":0,"社交通行证":0,"回响碎片":2,"冷却豁免权":0,"神秘钥匙":0},boss:{"市场先生":100,"伪研究员":100,"欲望魔神":100,"旧日幻影":100},ach:["盈利30万"],logs:["【系统启动】旅行者4.4 小程序主城版载入。"]}}
+let S=loadState();
+function loadState(){try{let x=localStorage.getItem("traveler44");if(x)return JSON.parse(x)}catch(e){}return defaultState()}
+function save(){localStorage.setItem("traveler44",JSON.stringify(S));toast("已保存")}
+function pushUndo(reason){let old=JSON.parse(JSON.stringify(S));old.undo=[];S.undo=S.undo||[];S.undo.push({time:new Date().toLocaleTimeString("zh-CN",{hour12:false}),reason,data:old});if(S.undo.length>20)S.undo.shift()}
+function undoLast(){if(!S.undo||!S.undo.length)return toast("没有可撤销动作");let last=S.undo.pop(),stack=S.undo;S=last.data;S.undo=stack;S.logs.push("【撤销】"+last.reason+"｜"+last.time);save();render();toast("已撤销")}
+function toast(t){$("#toast").textContent=t;$("#toast").classList.remove("hide");setTimeout(()=>$("#toast").classList.add("hide"),2200)}
+function log(t){S.logs.push("["+new Date().toLocaleTimeString("zh-CN",{hour12:false})+"] "+t);save();render()}
+function today(){let n=new Date(),w="日一二三四五六"[n.getDay()];return `${n.getFullYear()}-${String(n.getMonth()+1).padStart(2,"0")}-${String(n.getDate()).padStart(2,"0")} 星期${w}`}
+function rank(){return RANKS.find(x=>S.rp>=x[1]&&S.rp<=x[2])||RANKS[4]}
+function profit(){return Number(S.asset)-Number(S.principal)}
+function profitStage(){let p=profit();if(p>=5000000)return["P10 盈利500万",5000000,10000000];if(p>=2000000)return["P9 盈利200万",2000000,5000000];if(p>=1000000)return["P8 盈利100万",1000000,2000000];if(p>=800000)return["P7 盈利80万",800000,1000000];if(p>=500000)return["P6 盈利50万",500000,800000];if(p>=300000)return["P5 盈利30万",300000,500000];if(p>=200000)return["P4 盈利20万",200000,300000];if(p>=100000)return["P3 盈利10万",100000,200000];if(p>=0)return["P2 盈利积累期",0,100000];return["P1 回撤修复期",-500000,0]}
+function weekKey(dateStr){let d=new Date(dateStr.slice(0,10)),y=d.getFullYear(),first=new Date(y,0,1);return y+"-W"+Math.ceil((((d-first)/86400000)+first.getDay()+1)/7)}
+function weekStats(){let wk=weekKey(today()),rs=(S.dailyRecords||[]).filter(r=>weekKey(r.date)===wk),qs=(S.quickRecords||[]).filter(r=>weekKey(r.date)===wk);return{desire:rs.reduce((a,r)=>a+(r.desireCount||0),0)+qs.filter(r=>r.type==="desire").length,research:rs.reduce((a,r)=>a+(r.researchOutput?1:0),0)+qs.filter(r=>r.type==="research").length,study:rs.reduce((a,r)=>a+(r.studyMin||0),0)}}
+function go(id){$$(".page").forEach(p=>p.classList.toggle("active",p.id===id));$$(".bn").forEach((b,i)=>b.classList.toggle("active",["home","daily","records","tasks","more"][i]===id));scrollTo({top:0,behavior:"smooth"});render()}
+function init(){Object.entries(OPT).forEach(([k,v])=>{let l=document.createElement("label");l.textContent={sleep:"睡眠",watch:"看盘",research:"研究",ai:"AI依赖",desire:"今日欲望次数",shadow:"旧照/幻想",sport:"运动",care:"护肤/眼睛"}[k];let s=document.createElement("select");s.id=k;v.forEach(x=>s.add(new Option(x,x)));l.appendChild(s);$("#dailyForm").appendChild(l)});refreshTasks(false);render()}
+function render(){let r=rank(),ps=profitStage(),p=profit(),w=weekStats(),rpPct=(S.rp-r[1])/(r[2]-r[1])*100,profitPct=(p-ps[1])/(ps[2]-ps[1])*100;$("#rank").textContent=r[0];$("#title").textContent=S.title;$("#dateLine").textContent=today();$("#rp").textContent=`${S.rp}/${r[2]==999999?"∞":r[2]}`;$("#profitStageName").textContent=ps[0];$("#weekDesire").textContent=w.desire+"次";$("#weekResearch").textContent=w.research+"次";$("#sv").textContent=S.sv+"/100";$("#nightSmall").textContent=S.night+"/7";$("#weight").textContent=S.weight+"kg";$("#stable").textContent=S.stable+"/100";$("#asset").textContent="¥"+fmt(S.asset);$("#principal").textContent="¥"+fmt(S.principal);$("#profit").textContent=(p>=0?"+":"-")+"¥"+fmt(Math.abs(p));$("#gap").textContent=ps[2]-p>=0?"¥"+fmt(ps[2]-p):"已达成";$("#rpText").textContent=`境界进度：${r[0]} ${Math.max(0,Math.min(100,rpPct)).toFixed(0)}%`;$("#rpBar").style.width=Math.max(0,Math.min(100,rpPct))+"%";$("#profitText").textContent=`盈利阶段：${ps[0]}｜下一阶段进度`;$("#profitBar").style.width=Math.max(0,Math.min(100,profitPct))+"%";$("#svText").textContent=`SV ${S.sv}/100｜幻想、旧照、触发器会提高`;$("#svBar").style.width=Math.min(100,S.sv)+"%";$("#gate").textContent=Date.now()<S.freeze?"强门禁中：禁止加仓/浪花账/旅行":"强门禁：未开启";renderRecords();renderTasks();renderNPC();renderBoss()}
+function renderRecords(){if(!$("#recordList"))return;let w=weekStats();$("#totalDays").textContent=S.dailyRecords.length;$("#rWeekDesire").textContent=w.desire+"次";$("#rWeekResearch").textContent=w.research+"次";$("#rWeekStudy").textContent=w.study+"分钟";$("#recordList").innerHTML=S.dailyRecords.slice(-30).reverse().map(r=>`<div class="record"><b>${r.date}</b><br><small>RP ${r.rpChange>=0?"+":""}${r.rpChange}｜SV ${r.svAfter}｜欲望 ${r.desireCount}次｜研究输出 ${r.researchOutput?"是":"否"}｜${r.studyMin}min</small><p>${r.researchNote||""}</p><p>${r.desireNote||""}</p><p>${r.note||""}</p></div>`).join("")||"<p class='muted'>暂无日报。每天结算后会按日期显示在这里。</p>"}
+function renderTasks(){if(!$("#taskList"))return;$("#taskList").innerHTML=(S.tasks||[]).map((t,i)=>`<div class="task ${t.done?"done":""}"><h3>${t.icon} ${t.title}</h3><div class="meta">${t.reward}</div><p>${t.desc}</p><button onclick="completeTask(${i})" ${t.done?"disabled":""}>${t.done?"已完成":"完成任务"}</button></div>`).join("")}
+function renderNPC(){if(!$("#npcList"))return;$("#npcList").innerHTML=NPC.map(n=>`<div class="npc"><div class="avatar">${n[0]}</div><div><h3>${n[1]}</h3><p>${n[2]}</p><div class="meta">${n[3]}</div></div></div>`).join("")}
+function renderBoss(){if(!$("#bossGrid"))return;$("#bossGrid").innerHTML=Object.entries(S.boss).map(([k,v])=>`<div class="item"><h3>${k}</h3><div class="meta">HP ${v}/100</div><div class="bar ${k==="旧日幻影"?"purple":"red"}"><i style="width:${v}%"></i></div><p>${bossDesc(k)}</p></div>`).join("")}
+function bossDesc(k){return {"市场先生":"看盘≤2h -8HP；红色复盘 -25HP；看盘>6h 回满并强门禁。","伪研究员":"300字输出 -20HP；数据更新 -12HP；AI依赖过高 +20HP。","欲望魔神":"0次 -8HP；3次以上回血；本周≤1次额外-15HP。","旧日幻影":"现实锚定 -10HP；旧照/AI改图/幻想会回血。"}[k]}
+function refreshTasks(show=true){let w=weekStats();S.tasks=[{icon:"📘",title:"研究主线60分钟",desc:"围绕二级市场研究，完成一段能自己讲出来的输出。",reward:"+6RP｜伪研究员-18HP",type:"research",done:false},{icon:"📉",title:"看盘压缩到2小时内",desc:"今天不做屏幕奴隶，允许看但必须有限。",reward:"+3RP｜市场先生-8HP",type:"watch",done:false},{icon:"🏃",title:"身体锚定30分钟",desc:"骑车、快走、跑步、力量训练均可。",reward:"+3RP｜SV-5",type:"sport",done:false},{icon:"🌙",title:"夜潮修复",desc:"护肤/熄屏/不刷刺激三选一。",reward:"夜潮+1",type:"night",done:false}];if(w.desire>=3)S.tasks.push({icon:"🛡️",title:"欲望防线任务",desc:"今晚不碰旧照、不AI改图、不沉迷主页。",reward:"欲望魔神-10HP｜SV-5",type:"desire_guard",done:false});if(show){save();render();toast("任务已刷新")}}
+function completeTask(i){pushUndo("完成任务");let t=S.tasks[i];if(!t||t.done)return;t.done=true;if(t.type==="research"){S.rp+=6;S.boss["伪研究员"]=Math.max(0,S.boss["伪研究员"]-18);S.quickRecords.push({date:today(),type:"research"})}if(t.type==="watch"){S.rp+=3;S.boss["市场先生"]=Math.max(0,S.boss["市场先生"]-8)}if(t.type==="sport"){S.rp+=3;S.sv=Math.max(0,S.sv-5);S.boss["欲望魔神"]=Math.max(0,S.boss["欲望魔神"]-8)}if(t.type==="night"){S.night++;nightCheck()}if(t.type==="desire_guard"){S.sv=Math.max(0,S.sv-5);S.boss["欲望魔神"]=Math.max(0,S.boss["欲望魔神"]-10)}log("【任务完成】"+t.title+"｜"+t.reward)}
+function desireCountFromValue(v){return v==="0次"?0:v==="1次"?1:v==="2次"?2:v==="3次"?3:4}
+function settle(){pushUndo("日报结算");let add=0,studyMin=+study.value,desireN=desireCountFromValue(desire.value),researchOutput=research.value.startsWith("优");if(sleep.value.startsWith("优")){add+=3;S.night++}else if(sleep.value.startsWith("良"))add+=1;else add-=3;if(watch.value.startsWith("优")){add+=3;S.boss["市场先生"]=Math.max(0,S.boss["市场先生"]-8)}else if(watch.value.startsWith("差"))add-=5;else if(watch.value.startsWith("红色")){S.freeze=Date.now()+864e5;S.boss["市场先生"]=100;add-=8}if(researchOutput){add+=5;S.boss["伪研究员"]=Math.max(0,S.boss["伪研究员"]-20);S.data++}else if(research.value.startsWith("良"))add+=2;else add-=5;if(ai.value.startsWith("优"))add+=5;else if(ai.value.startsWith("差")){add-=10;S.boss["伪研究员"]=Math.min(100,S.boss["伪研究员"]+20)}if(desireN===0){add+=5;S.boss["欲望魔神"]=Math.max(0,S.boss["欲望魔神"]-8)}else if(desireN===1){add+=1;S.sv+=2}else if(desireN===2)S.sv+=4;else if(desireN===3){add-=3;S.sv+=6;S.boss["欲望魔神"]=Math.min(100,S.boss["欲望魔神"]+12)}else{add-=6;S.sv+=10;S.boss["欲望魔神"]=Math.min(100,S.boss["欲望魔神"]+25)}if(shadow.value.includes("旧照片")){S.sv+=3;S.boss["旧日幻影"]=Math.min(100,S.boss["旧日幻影"]+8)}if(shadow.value.includes("AI")){S.sv+=5;S.boss["旧日幻影"]=Math.min(100,S.boss["旧日幻影"]+15)}if(shadow.value.includes("幻想")){S.sv+=5;S.boss["旧日幻影"]=Math.min(100,S.boss["旧日幻影"]+12)}if(sport.value.includes("30")){add+=3;S.sv=Math.max(0,S.sv-5)}if(sport.value.includes("60")){add+=5;S.sv=Math.max(0,S.sv-8)}if(care.value!="无"){add+=1;S.night++}if(studyMin>=90)S.sv=Math.max(0,S.sv-8);else if(studyMin>=30)S.sv=Math.max(0,S.sv-3);S.sv=Math.max(0,Math.min(100,S.sv));S.rp=Math.max(0,S.rp+add);S.coins+=Math.max(0,Math.floor(add/2));S.stable=Math.max(0,Math.min(100,S.stable+(add>0?2:-3)));S.dailyRecords.push({date:today(),rpChange:add,svAfter:S.sv,desireCount:desireN,researchOutput,studyMin,watch:watch.value,sleep:sleep.value,researchNote:researchNote.value,desireNote:desireNote.value,note:note.value});log(`【日报】RP ${add>=0?"+":""}${add}｜欲望${desireN}次｜研究输出${researchOutput?"是":"否"}｜SV ${S.sv}`);note.value="";researchNote.value="";desireNote.value="";if(S.pity>=3&&studyMin>=10)drop(true);else if(Math.random()<.25)drop(false);else S.pity++;nightCheck();weeklyBossCheck();refreshTasks(false);save();render()}
+function weeklyBossCheck(){let w=weekStats();if(w.desire<=1)S.boss["欲望魔神"]=Math.max(0,S.boss["欲望魔神"]-15);if(w.desire>=4)S.boss["欲望魔神"]=Math.min(100,S.boss["欲望魔神"]+25);if(w.research>=3)S.boss["伪研究员"]=Math.max(0,S.boss["伪研究员"]-10)}
+function nightCheck(){if(S.night>=7){S.night=0;let d=rand(["旅行碎片","社交通行证"]);S.inv[d]=(S.inv[d]||0)+1;showDrop("夜潮净化",d+" x1");log("【夜潮净化】掉落："+d)}}
+function drop(force){let d=force?rand(["旅行碎片","开图碎片"]):rand(["旅币+2","旅行碎片","社交通行证","神秘钥匙"]);if(d==="旅币+2")S.coins+=2;else S.inv[d]=(S.inv[d]||0)+1;S.pity=0;showDrop(force?"保底大爆":"随机掉落",d)}
+function showDrop(t,txt){$("#dropTitle").textContent=t;$("#dropText").textContent=txt;$("#drop").classList.add("show")}
+function weeklyReview(){let w=weekStats();let txt=`【周结算】${weekKey(today())}
+本周欲望：${w.desire}次
+本周研究输出：${w.research}次
+本周研究分钟：${w.study}
+判定：${w.desire<=1?"欲望优秀":w.desire<=3?"欲望可控":"欲望高危"}｜${w.research>=3?"研究合格":"研究不足"}`;S.weeklyReviews.push(txt);moreBox.textContent=txt;log(txt)}
+function assetUpdate(){pushUndo("资产/本金更新");let a=prompt("输入当前总资产",S.asset);if(a===null)return;let p=prompt("输入当前本金/累计投入",S.principal);if(p===null)return;S.asset=Number(a||0);S.principal=Number(p||0);log("【资产更新】总资产¥"+fmt(S.asset)+"｜本金¥"+fmt(S.principal))}
+function setWeight(){pushUndo("体重更新");let v=prompt("输入体重kg",S.weight);if(v!==null&&v!==""){S.weight=+v;log("【体重更新】"+S.weight+"kg")}}
+function showBag(){moreBox.textContent=JSON.stringify(S.inv,null,2)}
+function showLog(){moreBox.textContent=S.logs.slice(-150).join("
+")}
+function showStats(){let w=weekStats();moreBox.textContent=`总资产：¥${fmt(S.asset)}
+本金：¥${fmt(S.principal)}
+盈利：${profit()>=0?"+":"-"}¥${fmt(Math.abs(profit()))}
+盈利阶段：${profitStage()[0]}
+RP：${S.rp}
+本周欲望：${w.desire}次
+本周研究输出：${w.research}次
+本周研究分钟：${w.study}
+SV：${S.sv}/100
+日报数：${S.dailyRecords.length}`}
+function exportSave(){moreBox.textContent=JSON.stringify(S,null,2);toast("存档已显示")}
+function importSave(){let t=prompt("粘贴存档JSON");if(!t)return;try{pushUndo("导入存档");S=JSON.parse(t);save();render();toast("导入成功")}catch(e){toast("格式错误")}}
+function resetConfirm(){if(confirm("确认清空旅行者4.4？")){localStorage.removeItem("traveler44");location.reload()}}
+function makeBounty(){let w=weekStats();let obj={系统:"旅行者4.4",日期:today(),RP:S.rp,总资产:S.asset,本金:S.principal,盈利:profit(),盈利阶段:profitStage()[0],体重:S.weight,SV:S.sv,本周欲望:w.desire,本周研究输出:w.research,最近日报:S.dailyRecords.slice(-3),Boss:S.boss,背包:S.inv,今日精力:energy.value,可用时间:time.value,主风险:risk.value,场景:scene.value,说明:bnote.value,请求:"请发布今日RPG任务悬赏：主线、支线、限时、禁止事项、奖励、惩罚、Boss攻击、地图剧情、最低保底。"};bout.textContent="【旅行者4.4｜GPT悬赏请求】
+"+JSON.stringify(obj,null,2)}
+async function copyBounty(){try{await navigator.clipboard.writeText(bout.textContent);toast("已复制")}catch(e){toast("复制失败")}}
+
+/* ===== 旅行者4.4 动态内容增强 ===== */
+const EVENTS44=[
+ {t:"星港异动",d:"市场突然大涨，你很想追进去。",c:[["冷静记录，不加仓","市场先生-10HP｜RP+3","market_good"],["追涨上头","市场先生回满｜RP-6","market_bad"]]},
+ {t:"旧日低语",d:"夜里突然想翻旧照，或者继续AI生成她的新照片。",c:[["放回档案馆，去洗脸","旧日幻影-10HP｜SV-5","shadow_good"],["再看一会儿","旧日幻影+12HP｜SV+5","shadow_bad"]]},
+ {t:"匠铺火光",d:"今天适合做一次真正的研究输出。",c:[["写300字逻辑","伪研究员-20HP｜RP+5","research_good"],["只看盘不输出","伪研究员+15HP｜RP-5","research_bad"]]},
+ {t:"熔炉召唤",d:"身体在提醒你动起来。",c:[["运动30分钟","欲望魔神-8HP｜SV-5｜RP+3","sport_good"],["继续躺着","稳定度-3","lazy_bad"]]},
+ {t:"浪花码头",d:"你想买点东西奖励自己。",c:[["先完成主线再消费","旅币+3｜稳定+2","buy_good"],["直接冲动消费","RP-3","buy_bad"]]},
+ {t:"黑曜城墙",d:"今天有点烦，想摆烂。",c:[["做10分钟最低主线","RP+2｜保底计数+1","minimum"],["完全摆烂","稳定度-5｜SV+3","collapse"]]}
+];
+const SHOP44=[["咖啡/奶茶",20],["电影",40],["轻娱乐30分钟",30],["外食升级",60],["火锅",80],["买书",50],["小配饰",100],["正式纪念品",200]];
+const TRAVEL44=[["省内侦察开图",2],["省内半日",8],["省内一日",15],["两日一夜",25],["跨国短途",80],["远行远征",120]];
+const NPC_LINES44=[
+ "档案官：不要让一天无痕消失，今天至少留下一条真实记录。",
+ "纪律骑士：你现在不是没机会，而是不能让资金比认知跑得太快。",
+ "匠铺导师：研究不是看过，是你能讲出来、写下来、跟踪下去。",
+ "夜潮医师：脸和睡眠是一条线，今晚别拿皮肤赌。",
+ "旧日看守：回忆可以进档案馆，但不能占领主城。",
+ "熔炉教官：欲望上来的时候，先让身体动起来。",
+ "星港司库：盈利阶段看的是本金之后的净增长，不是账户数字幻觉。",
+ "远行向导：真正的旅行不是逃避，是主线完成后的开图。"
+];
+
+function renderEvent44(){
+  const box=document.getElementById("eventBox"), choices=document.getElementById("eventChoices");
+  if(!box||!choices)return;
+  if(!S.event44) S.event44=EVENTS44[0];
+  const e=S.event44;
+  box.innerHTML=`<h3>${e.t}</h3><p>${e.d}</p>`;
+  choices.innerHTML=e.c.map((x,i)=>`<div class="task"><b>${x[0]}</b><div class="meta">${x[1]}</div><button onclick="chooseEvent44(${i})">选择</button></div>`).join("");
+}
+function rollEvent(){
+  pushUndo("刷新随机事件");
+  S.event44=EVENTS44[Math.floor(Math.random()*EVENTS44.length)];
+  save(); render(); toast("事件已刷新");
+}
+function chooseEvent44(i){
+  pushUndo("事件选择");
+  const e=S.event44||EVENTS44[0], c=e.c[i], type=c[2];
+  if(type==="market_good"){S.rp+=3;S.boss["市场先生"]=Math.max(0,S.boss["市场先生"]-10)}
+  if(type==="market_bad"){S.rp=Math.max(0,S.rp-6);S.boss["市场先生"]=100}
+  if(type==="shadow_good"){S.sv=Math.max(0,S.sv-5);S.boss["旧日幻影"]=Math.max(0,S.boss["旧日幻影"]-10)}
+  if(type==="shadow_bad"){S.sv=Math.min(100,S.sv+5);S.boss["旧日幻影"]=Math.min(100,S.boss["旧日幻影"]+12)}
+  if(type==="research_good"){S.rp+=5;S.boss["伪研究员"]=Math.max(0,S.boss["伪研究员"]-20);S.quickRecords.push({date:today(),type:"research"})}
+  if(type==="research_bad"){S.rp=Math.max(0,S.rp-5);S.boss["伪研究员"]=Math.min(100,S.boss["伪研究员"]+15)}
+  if(type==="sport_good"){S.rp+=3;S.sv=Math.max(0,S.sv-5);S.boss["欲望魔神"]=Math.max(0,S.boss["欲望魔神"]-8)}
+  if(type==="lazy_bad"){S.stable=Math.max(0,S.stable-3)}
+  if(type==="buy_good"){S.coins+=3;S.stable=Math.min(100,S.stable+2)}
+  if(type==="buy_bad"){S.rp=Math.max(0,S.rp-3)}
+  if(type==="minimum"){S.rp+=2;S.pity=(S.pity||0)+1}
+  if(type==="collapse"){S.stable=Math.max(0,S.stable-5);S.sv=Math.min(100,S.sv+3)}
+  log("【随机事件】"+e.t+"｜"+c[0]+"｜"+c[1]);
+  S.event44=EVENTS44[Math.floor(Math.random()*EVENTS44.length)];
+  save(); render();
+}
+function npcSpeak(){
+  const out=document.getElementById("npcOut");
+  if(out) out.textContent=NPC_LINES44[Math.floor(Math.random()*NPC_LINES44.length)];
+}
+function showShop(){moreBox.textContent=SHOP44.map(x=>`${x[0]}｜${x[1]}旅币`).join("\n")}
+function showTravel(){moreBox.textContent=TRAVEL44.map(x=>`${x[0]}｜${x[1]}旅行碎片`).join("\n")}
+const oldRender44=render;
+render=function(){
+  oldRender44();
+  renderEvent44();
+};
+const oldRefresh44=refreshTasks;
+refreshTasks=function(show=true){
+  oldRefresh44(false);
+  const w=weekStats();
+  if(S.sv>=20 && !(S.tasks||[]).some(t=>t.type==="sv_clean")){
+    S.tasks.push({icon:"🌊",title:"SV净化任务",desc:"离开屏幕，散步或运动20分钟，切断幻想链路。",reward:"SV-8｜旧日幻影-8HP",type:"sv_clean",done:false});
+  }
+  if(w.research<2 && !(S.tasks||[]).some(t=>t.type==="must_research")){
+    S.tasks.push({icon:"📚",title:"本周研究补课",desc:"补一条可沉淀的研究记录，不能只看盘。",reward:"+5RP｜伪研究员-15HP",type:"must_research",done:false});
+  }
+  if(show){save();render();toast("动态任务已刷新")}
+};
+const oldComplete44=completeTask;
+completeTask=function(i){
+  const t=S.tasks[i];
+  if(t&&t.type==="sv_clean"){pushUndo("完成SV净化任务");t.done=true;S.sv=Math.max(0,S.sv-8);S.boss["旧日幻影"]=Math.max(0,S.boss["旧日幻影"]-8);log("【任务完成】SV净化任务｜SV-8｜旧日幻影-8HP");return}
+  if(t&&t.type==="must_research"){pushUndo("完成研究补课");t.done=true;S.rp+=5;S.boss["伪研究员"]=Math.max(0,S.boss["伪研究员"]-15);S.quickRecords.push({date:today(),type:"research"});log("【任务完成】本周研究补课｜+5RP｜伪研究员-15HP");return}
+  oldComplete44(i);
+};
+
+init();
+</script></body></html>
