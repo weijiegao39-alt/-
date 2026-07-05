@@ -1,0 +1,171 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#07111f">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="TravelerOS7">
+<title>TravelerOS 7.0｜现实奖惩版</title>
+<style>
+:root{--bg:#07111f;--card:#101b2d;--deep:#020617;--line:#2a3b55;--txt:#e5e7eb;--muted:#94a3b8;--g:#34d399;--r:#fb7185;--y:#facc15;--p:#a78bfa;--b:#38bdf8}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+body{margin:0;background:linear-gradient(180deg,#07111f,#020617);color:var(--txt);font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Microsoft YaHei",Arial,sans-serif;padding-bottom:92px}
+header{position:sticky;top:0;z-index:20;background:rgba(7,17,31,.95);backdrop-filter:blur(18px);border-bottom:1px solid var(--line);padding:14px;display:flex;justify-content:space-between;gap:10px;align-items:center}
+h1{margin:0;font-size:21px}h2{margin:0 0 12px;font-size:18px}h3{margin:0 0 7px;font-size:16px}p{line-height:1.55}.sub,.muted,.label{color:var(--muted);font-size:13px}
+main{max-width:720px;margin:auto;padding:12px}.page{display:none;gap:12px}.page.active{display:grid}
+.card{background:linear-gradient(180deg,rgba(16,27,45,.98),rgba(7,16,29,.98));border:1px solid var(--line);border-radius:24px;padding:16px;box-shadow:0 10px 28px rgba(0,0,0,.25)}
+.hero{background:radial-gradient(circle at 88% 5%,rgba(56,189,248,.28),transparent 35%),linear-gradient(180deg,#14233d,#07101d)}
+.row{display:flex;justify-content:space-between;gap:10px;align-items:center}.right{text-align:right}.big{font-size:30px;font-weight:950;line-height:1.15}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:9px}.stat{background:rgba(2,6,23,.78);border:1px solid var(--line);border-radius:17px;padding:11px}.stat span{display:block;color:var(--muted);font-size:12px}.stat b{display:block;margin-top:5px;font-size:17px}
+.bar{height:11px;background:#020617;border:1px solid #263348;border-radius:999px;overflow:hidden;margin:8px 0}.bar i{display:block;height:100%;width:0;background:linear-gradient(90deg,#059669,#34d399);transition:.35s}.red i{background:linear-gradient(90deg,#be123c,#fb7185)}.yellow i{background:linear-gradient(90deg,#ca8a04,#facc15)}.purple i{background:linear-gradient(90deg,#6d28d9,#a78bfa)}.blue i{background:linear-gradient(90deg,#0284c7,#38bdf8)}
+button,select,input,textarea{font:inherit}button{border:0;border-radius:15px;background:#1f2937;color:white;padding:12px 14px;font-weight:850;min-height:45px}button:active{transform:scale(.98)}.primary{background:linear-gradient(135deg,#047857,#10b981);width:100%;margin-top:10px}.danger{background:#7f1d1d}.ghost{background:#0f172a;border:1px solid var(--line)}.wide{width:100%;margin-top:8px}.bluebtn{background:#075985}
+select,input,textarea{width:100%;background:#020617;color:white;border:1px solid #334155;border-radius:13px;padding:11px;margin-top:6px;min-height:44px}textarea{min-height:92px}
+.ok{border:1px solid rgba(52,211,153,.28);background:rgba(5,150,105,.08);border-radius:15px;padding:11px;line-height:1.55}.warn{border:1px solid rgba(251,113,133,.35);background:rgba(127,29,29,.22);color:#fecdd3;border-radius:15px;padding:11px;line-height:1.55}
+.apps{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}.app{background:#08111f;border:1px solid var(--line);border-radius:18px;padding:9px;text-align:center;min-height:76px}.app i{display:block;font-size:23px}.app span{display:block;font-size:12px;color:var(--muted);margin-top:4px}
+.task,.record,.boss,.rule,.choice{background:#08111f;border:1px solid var(--line);border-radius:18px;padding:13px;margin:8px 0}.task.done{opacity:.6;border-color:#14532d}.task.current{border-color:var(--g);box-shadow:0 0 0 1px rgba(52,211,153,.25)}.locked{opacity:.55;filter:grayscale(.4)}.meta{color:var(--y);font-size:13px;margin:5px 0}.pill{display:inline-block;border:1px solid var(--line);background:#08111f;border-radius:99px;padding:5px 9px;color:#cbd5e1;font-size:12px;margin:3px}
+pre{white-space:pre-wrap;background:#020617;border:1px solid var(--line);border-radius:15px;padding:12px;max-height:460px;overflow:auto;font-size:13px;line-height:1.55}
+.bottom{position:fixed;left:0;right:0;bottom:0;z-index:30;background:rgba(7,17,31,.96);backdrop-filter:blur(18px);border-top:1px solid var(--line);display:grid;grid-template-columns:repeat(5,1fr);padding:8px 8px calc(8px + env(safe-area-inset-bottom))}
+.bottom button{background:transparent;color:#cbd5e1;border-radius:13px;font-size:12px;padding:7px 2px;min-height:50px}.bottom button.active{background:#12332c;color:#fff}.bottom span{display:block;font-size:20px}
+.toast{position:fixed;left:50%;bottom:92px;transform:translateX(-50%);background:#020617;border:1px solid var(--line);border-radius:16px;padding:13px;z-index:50;max-width:90vw}.hide{display:none}
+.timer{font-size:44px;font-weight:950;text-align:center;margin:12px 0}.fine{color:var(--r)}.good{color:var(--g)}
+@media(max-width:560px){.grid{grid-template-columns:1fr 1fr}.apps{grid-template-columns:repeat(4,1fr)}.big{font-size:28px}}
+</style>
+</head>
+<body>
+<header>
+  <div><h1>TravelerOS 7.0</h1><div class="sub">现实奖惩版｜不靠自律，靠权限、后果、替代动作</div></div>
+  <button id="saveBtn">保存</button>
+</header>
+
+<main>
+<section id="home" class="page active">
+  <article class="card hero">
+    <div class="row">
+      <div><div class="label">现在该做什么</div><div id="heroTitle" class="big"></div></div>
+      <div class="right"><div id="today" class="label"></div><b id="mode"></b></div>
+    </div>
+    <p id="heroDesc" class="muted"></p>
+    <div id="heroTags"></div>
+    <button id="startBtn" class="primary">开始当前动作</button>
+    <button id="doneBtn" class="ghost wide">完成，记录奖励</button>
+    <button id="helpBtn" class="danger wide">欲望/翻本上头，立刻干预</button>
+  </article>
+
+  <article class="card">
+    <h2>现实权限</h2>
+    <div class="grid">
+      <div class="stat"><span>燃机主线</span><b id="mainPct"></b></div>
+      <div class="stat"><span>可用娱乐币</span><b id="coins"></b></div>
+      <div class="stat"><span>AI许可证</span><b id="aiPass"></b></div>
+      <div class="stat"><span>交易权限</span><b id="tradeLock"></b></div>
+      <div class="stat"><span>SV幻影值</span><b id="sv"></b></div>
+      <div class="stat"><span>本周🦌</span><b id="weekD"></b></div>
+    </div>
+    <div id="gateText" class="warn" style="margin-top:10px"></div>
+  </article>
+
+  <article class="card">
+    <h2>入口</h2>
+    <div class="apps">
+      <button class="app" data-go="intervene"><i>🧯</i><b>干预</b><span>欲望/翻本</span></button>
+      <button class="app" data-go="mission"><i>⚔️</i><b>主线</b><span>燃机/PPT</span></button>
+      <button class="app" data-go="decision"><i>🚪</i><b>决策</b><span>冲动前</span></button>
+      <button class="app" data-go="daily"><i>📝</i><b>日报</b><span>10秒</span></button>
+      <button class="app" data-go="reward"><i>🎁</i><b>奖惩</b><span>兑换/封禁</span></button>
+      <button class="app" data-go="archive"><i>📚</i><b>档案</b><span>历史</span></button>
+      <button class="app" data-go="boss"><i>👹</i><b>Boss</b><span>血条</span></button>
+      <button class="app" data-go="gpt"><i>🤖</i><b>GPT</b><span>悬赏</span></button>
+    </div>
+  </article>
+</section>
+
+<section id="intervene" class="page">
+  <article class="card">
+    <h2>实时干预</h2>
+    <div class="warn">不是让你“忍住”，而是把冲动拆成后果、替代动作、倒计时。</div>
+    <div class="grid">
+      <button class="trigger" data-type="ai">想AI改图</button>
+      <button class="trigger" data-type="desire">想🦌</button>
+      <button class="trigger" data-type="trade">想翻本/加杠杆</button>
+      <button class="trigger" data-type="fantasy">想怀旧幻想</button>
+    </div>
+    <div id="interventionBox"></div>
+    <div id="timer" class="timer">--:--</div>
+    <button id="startTimerBtn" class="primary">启动替代动作倒计时</button>
+    <button id="escapeBtn" class="bluebtn wide">我撤离了，记录奖励</button>
+    <button id="failBtn" class="danger wide">我还是失控了，记录后果</button>
+  </article>
+</section>
+
+<section id="mission" class="page"><article class="card"><h2>燃气轮机数据库 & PPT</h2><div class="ok">现实目标：完成数据库和PPT，并且能讲清。每推进10%，才发放娱乐币和AI许可证。</div><div id="missionList"></div></article></section>
+
+<section id="decision" class="page"><article class="card"><h2>决策室</h2><div class="ok">冲动前必须进门。这里不评价你，只算后果。</div><div class="grid"><button class="decision" data-type="ai">AI改图</button><button class="decision" data-type="desire">🦌</button><button class="decision" data-type="trade">交易翻本</button><button class="decision" data-type="lazy">摆烂</button></div><pre id="decisionOut"></pre></article></section>
+
+<section id="daily" class="page"><article class="card"><h2>10秒日报</h2>
+<label>燃机研究<select id="r"><option>无</option><option>阅读</option><option>输出300字</option><option>更新数据库/PPT</option><option>能讲清一个模块</option></select></label>
+<label>今天🦌<select id="d"><option>0次</option><option>1次</option><option>2次</option><option>3次</option><option>4次及以上</option></select></label>
+<label>AI改图/幻想<select id="f"><option>无</option><option>想了但停住</option><option>旧照/幻想15分钟内</option><option>AI改图/扩建幻想</option><option>严重失控</option></select></label>
+<label>投资纪律<select id="t"><option>无交易</option><option>正常看盘</option><option>看盘过久</option><option>冲动交易/想翻本</option></select></label>
+<label>身体/离屏<select id="b"><option>无</option><option>离屏20分钟</option><option>运动30分钟</option><option>运动60分钟</option></select></label>
+<label>一句真实记录<textarea id="note" placeholder="今天真实发生了什么？"></textarea></label>
+<button id="settleBtn" class="primary">提交日报</button>
+</article></section>
+
+<section id="reward" class="page"><article class="card"><h2>现实奖惩</h2><div class="ok">奖励不是“想玩就玩”，必须用主线赚。惩罚不是羞辱，是权限冻结。</div><div id="rewardList"></div></article></section>
+
+<section id="archive" class="page"><article class="card"><h2>档案馆</h2><div class="grid"><div class="stat"><span>累计日报</span><b id="total"></b></div><div class="stat"><span>连续撤离</span><b id="streak"></b></div><div class="stat"><span>本周研究</span><b id="weekR"></b></div><div class="stat"><span>封禁冷却</span><b id="cooldown"></b></div></div><div id="records"></div></article></section>
+
+<section id="boss" class="page"><article class="card"><h2>Boss大厅</h2><div id="bossList"></div></article></section>
+
+<section id="gpt" class="page"><article class="card"><h2>GPT悬赏</h2><label>补充<textarea id="gptNote"></textarea></label><button id="makeGptBtn" class="primary">生成今日任务请求</button><pre id="gptOut"></pre><button id="copyGptBtn">复制</button></article></section>
+</main>
+
+<nav class="bottom">
+  <button class="nav active" data-go="home"><span>🏠</span>主页</button>
+  <button class="nav" data-go="intervene"><span>🧯</span>干预</button>
+  <button class="nav" data-go="mission"><span>⚔️</span>主线</button>
+  <button class="nav" data-go="daily"><span>📝</span>日报</button>
+  <button class="nav" data-go="archive"><span>📚</span>档案</button>
+</nav>
+<div id="toast" class="toast hide"></div>
+
+<script>
+const $=q=>document.querySelector(q),$$=q=>[...document.querySelectorAll(q)],clamp=(v,a,b)=>Math.max(a,Math.min(b,v)),KEY="traveler70";
+function def(){return{mode:"现实修复",rp:0,coins:0,aiPass:0,sv:30,risk:75,lockUntil:Date.now()+24*3600*1000,streak:0,now:0,currentIntervention:null,timerEnd:0,records:[],logs:[],main:[["供给端：叶片/热端件","高温合金、叶片、燃烧室、机匣、良率/产能/瓶颈",0],["需求端：调峰/新增/替换","调峰、新增装机、存量替换、AIDC",0],["公司对比","应流/东方电气/杰瑞/海外PCC/Howmet，字段可追踪",0],["估值框架","利润预测、PE、周期性、订单确认、毛利率路径",0],["PPT答辩","10分钟讲清，能回答3个追问",0]],boss:{"高刺激循环":90,"欲望魔神":85,"市场先生":80,"伪研究员":70,"旧日幻影":75}}}
+let S=load();function load(){try{return JSON.parse(localStorage.getItem(KEY))||def()}catch(e){return def()}}function save(){localStorage.setItem(KEY,JSON.stringify(S))}
+function toast(x){$("#toast").textContent=x;$("#toast").classList.remove("hide");setTimeout(()=>$("#toast").classList.add("hide"),1800)}
+function today(){let n=new Date(),w="日一二三四五六"[n.getDay()];return `${n.getMonth()+1}.${n.getDate()} 周${w}`}
+function wk(){let r=S.records.slice(-7);return{d:r.reduce((a,x)=>a+x.d,0),res:r.reduce((a,x)=>a+(x.rs>0?1:0),0)}}
+function pct(){return Math.round(S.main.reduce((a,x)=>a+x[2],0)/S.main.length)}
+function cool(){return Math.max(0,Math.ceil((S.lockUntil-Date.now())/3600000))}
+function unlocked(){return cool()==0 && S.risk<55 && S.sv<40 && wk().res>=3}
+function current(){let arr=[];if(S.risk>65||S.sv>45)arr.push(["先干预，不做选择","你现在不是缺道理，是处在高刺激回路里。", "止血"]);arr.push(["燃机研究40分钟","推进供给/需求/公司/估值/PPT其中一项。","主线"]);arr.push(["写三句话","推进了什么、卡在哪里、下一步是什么。","档案"]);return arr[S.now%arr.length]}
+function render(){let w=wk(),c=current();$("#today").textContent=today();$("#mode").textContent=S.mode;$("#heroTitle").textContent=c[0];$("#heroDesc").textContent=c[1];$("#heroTags").innerHTML=`<span class="pill">${c[2]}</span><span class="pill">三秒原则</span>`;$("#mainPct").textContent=pct()+"%";$("#coins").textContent=S.coins;$("#aiPass").textContent=S.aiPass;$("#tradeLock").textContent=unlocked()?"小仓位开放":"锁定";$("#sv").textContent=S.sv+"/100";$("#weekD").textContent=w.d+"次";$("#gateText").textContent=unlocked()?"交易权限开放：仅限研究支撑的小仓位，禁止杠杆翻本。":"权限锁定：禁止杠杆、禁止翻本、AI改图需许可证。冷却 "+cool()+"h";$("#missionList").innerHTML=S.main.map((x,i)=>`<div class="task"><h3>${x[0]}｜${x[2]}%</h3><p>${x[1]}</p><div class="bar"><i style="width:${x[2]}%"></i></div><button onclick="upMain(${i})">推进10%</button></div>`).join("");renderIntervention();renderReward();renderArchive();renderBoss();save()}
+function renderIntervention(){let type=S.currentIntervention||"ai",d=plan(type);$("#interventionBox").innerHTML=`<div class="choice"><h3>${d.title}</h3><p>${d.warn}</p><div class="meta">继续的现实后果</div><p>${d.cost}</p><div class="meta">替代动作</div><p>${d.action}</p></div>`;let left=Math.max(0,Math.floor((S.timerEnd-Date.now())/1000));$("#timer").textContent=left?`${String(Math.floor(left/60)).padStart(2,"0")}:${String(left%60).padStart(2,"0")}`:"--:--"}
+function plan(type){return{ai:{title:"旧日幻影入侵",warn:"你不是想创作，你是在给幻想世界添砖。",cost:"SV +15；今晚更容易🦌；燃机主线大概率被偷走40分钟。",action:"手机放远，洗脸2分钟，然后只看燃机供给端15分钟。"},desire:{title:"欲望魔神靠近",warn:"现在不是靠意志硬扛，而是要打断生理回路。",cost:"本周次数+1；SV +10；明天更容易继续。",action:"离屏20分钟，走路/洗澡/俯卧撑，回来再决定。"},trade:{title:"市场先生诱捕",warn:"爆仓后想翻本，本质是止痛，不是投资。",cost:"强门禁重置24h；风险 +20；禁止新增仓位。",action:"写100字复盘：为什么亏、是否研究支撑、最坏结果。"},fantasy:{title:"时间迷宫开启",warn:"怀旧可以进档案馆，但不能占领主城。",cost:"研究取消；SV +8；旧日幻影回血。",action:"把照片关闭，打开燃机PPT，只改一页标题。"}}[type]}
+function renderReward(){let items=[["轻娱乐20分钟",8,"entertain"],["AI图像娱乐一次",1,"ai"],["外食升级",20,"food"],["电影/游戏一小时",30,"movie"]];$("#rewardList").innerHTML=items.map(x=>`<div class="task"><h3>${x[0]}</h3><p>${x[2]=="ai"?"消耗1张AI许可证，禁止旧人幻想扩建。":"消耗 "+x[1]+" 娱乐币。"}</p><button onclick="buyReward('${x[2]}',${x[1]})">兑换</button></div>`).join("")}
+function renderArchive(){let w=wk();$("#total").textContent=S.records.length;$("#streak").textContent=S.streak+"天";$("#weekR").textContent=w.res+"次";$("#cooldown").textContent=cool()+"h";$("#records").innerHTML=S.records.slice(-20).reverse().map(r=>`<div class="record"><b>${r.date}</b><br><span class="muted">RP ${r.rp>=0?"+":""}${r.rp}｜🦌 ${r.d}｜研究 ${r.research}｜SV ${r.sv}｜风险 ${r.risk}</span><p>${r.note||""}</p></div>`).join("")||"<p class='muted'>还没有日报。</p>"}
+function renderBoss(){$("#bossList").innerHTML=Object.entries(S.boss).map(([k,v])=>`<div class="boss"><h3>${k} HP ${v}/100</h3><div class="bar red"><i style="width:${v}%"></i></div><p>${desc(k)}</p></div>`).join("")}
+function desc(k){return{"高刺激循环":"AI改图、🦌、看盘翻本是同一个刺激回路。","欲望魔神":"天天🦌会回血，撤离和运动会掉血。","市场先生":"冲动交易/翻本/杠杆会回血。","伪研究员":"只看盘不输出会回血，研究输出会掉血。","旧日幻影":"旧照和AI幻想扩建会回血。"}[k]}
+function go(id){$$(".page").forEach(p=>p.classList.toggle("active",p.id===id));$$(".nav").forEach(b=>b.classList.toggle("active",b.dataset.go===id));render();scrollTo({top:0,behavior:"smooth"})}
+function doneNow(){let c=current();S.rp+=c[2]=="主线"?5:2;if(c[2]=="主线"){S.boss["伪研究员"]-=8;S.risk-=4}if(c[2]=="止血"){S.sv-=10;S.risk-=10;S.boss["高刺激循环"]-=8;S.streak++}norm();S.now++;toast("完成："+c[0]);render()}
+function upMain(i){S.main[i][2]=clamp(S.main[i][2]+10,0,100);S.rp+=5;S.coins+=5;S.aiPass+= (S.main[i][2]%30==0?1:0);S.boss["伪研究员"]-=8;S.risk-=5;norm();toast("主线推进：+5娱乐币，可能获得AI许可证");render()}
+function trigger(type){S.currentIntervention=type;go("intervene")}
+function startTimer(){let type=S.currentIntervention||"ai";let min=type=="trade"?10:20;S.timerEnd=Date.now()+min*60000;toast("倒计时启动，离开屏幕");render()}
+setInterval(()=>{if(S.timerEnd>Date.now())renderIntervention()},1000)
+function escape(){let type=S.currentIntervention||"ai";S.sv-= type=="trade"?0:10;S.risk-=12;S.coins+=3;S.streak++;S.boss["高刺激循环"]-=8;if(type=="desire")S.boss["欲望魔神"]-=10;if(type=="ai"||type=="fantasy")S.boss["旧日幻影"]-=10;if(type=="trade")S.boss["市场先生"]-=10;norm();toast("撤离成功：娱乐币+3，Boss掉血");render()}
+function fail(){let type=S.currentIntervention||"ai";S.sv+= type=="trade"?0:15;S.risk+= type=="trade"?20:15;S.streak=0;S.coins=Math.max(0,S.coins-5);S.lockUntil=Date.now()+24*3600*1000;S.boss["高刺激循环"]+=10;if(type=="desire")S.boss["欲望魔神"]+=15;if(type=="ai"||type=="fantasy")S.boss["旧日幻影"]+=15;if(type=="trade")S.boss["市场先生"]+=20;norm();toast("已记录后果：冷却24h，娱乐币-5");render()}
+function decision(type){let p=plan(type);$("#decisionOut").textContent=`${p.title}\n\n${p.warn}\n\n继续后果：\n${p.cost}\n\n现在只做：\n${p.action}`;}
+function buyReward(type,cost){if(type=="ai"){if(S.aiPass<=0)return toast("没有AI许可证：先推进主线");S.aiPass--;S.risk+=3;toast("AI娱乐一次，但禁止旧人幻想扩建");}else{if(S.coins<cost)return toast("娱乐币不足：先完成主线");S.coins-=cost;toast("兑换成功");}render()}
+function dnum(v){return v=="0次"?0:v=="1次"?1:v=="2次"?2:v=="3次"?3:4}
+function rscore(v){return v=="无"?0:v=="阅读"?1:v=="输出300字"?2:v=="更新数据库/PPT"?3:4}
+function settle(){let rs=rscore(r.value),dn=dnum(d.value),rp=rs*3;if(dn==0){rp+=5;S.sv-=8;S.boss["欲望魔神"]-=10}else if(dn<=2){S.sv+=dn*5;S.risk+=dn*4}else{rp-=8;S.sv+=15;S.risk+=15;S.boss["欲望魔神"]+=15;S.lockUntil=Date.now()+24*3600*1000}if(f.value.includes("AI")||f.value.includes("严重")){rp-=8;S.sv+=15;S.risk+=12;S.boss["旧日幻影"]+=15;S.lockUntil=Date.now()+24*3600*1000}else if(f.value.includes("停住")){rp+=3;S.sv-=5}if(t.value.includes("冲动")){rp-=12;S.risk+=20;S.boss["市场先生"]+=20;S.lockUntil=Date.now()+24*3600*1000}else if(t.value=="正常看盘")S.risk+=3;if(b.value.includes("20")){rp+=2;S.risk-=8;S.sv-=6}if(b.value.includes("30")){rp+=4;S.risk-=10;S.sv-=8}if(b.value.includes("60")){rp+=6;S.risk-=15;S.sv-=12}S.rp=Math.max(0,S.rp+rp);if(rs>=2){S.coins+=5;S.aiPass+=rs>=3?1:0}norm();S.records.push({date:new Date().toLocaleDateString("zh-CN"),rp,d:dn,research:r.value,rs,sv:S.sv,risk:S.risk,note:note.value});note.value="";toast("已存档，权限已更新");render()}
+function norm(){S.sv=clamp(S.sv,0,100);S.risk=clamp(S.risk,0,100);Object.keys(S.boss).forEach(k=>S.boss[k]=clamp(S.boss[k],0,100))}
+function makeGpt(){let w=wk(),obj={系统:"TravelerOS 7.0 现实奖惩版",当前任务:current(),燃机主线进度:pct()+"%",SV:S.sv,风险:S.risk,娱乐币:S.coins,AI许可证:S.aiPass,交易权限:unlocked(),冷却小时:cool(),本周欲望:w.d,本周研究:w.res,最近记录:S.records.slice(-3),补充:gptNote.value,请求:"请直接给我今天的Now/Next/After，不讲大道理。要求现实奖惩明确：完成给什么权限，失控冻结什么权限。围绕燃机数据库/PPT、戒🦌、心态和交易冷静。"};gptOut.textContent=JSON.stringify(obj,null,2)}
+async function copyGpt(){try{await navigator.clipboard.writeText(gptOut.textContent);toast("已复制")}catch(e){toast("复制失败")}}
+function bind(){document.querySelectorAll("[data-go]").forEach(b=>b.onclick=()=>go(b.dataset.go));document.querySelectorAll(".trigger").forEach(b=>b.onclick=()=>trigger(b.dataset.type));document.querySelectorAll(".decision").forEach(b=>b.onclick=()=>decision(b.dataset.type));saveBtn.onclick=()=>{save();toast("已保存")};startBtn.onclick=()=>toast("开始："+current()[0]);doneBtn.onclick=doneNow;helpBtn.onclick=()=>go("intervene");startTimerBtn.onclick=startTimer;escapeBtn.onclick=escape;failBtn.onclick=fail;settleBtn.onclick=settle;makeGptBtn.onclick=makeGpt;copyGptBtn.onclick=copyGpt}
+bind();render();
+</script>
+</body>
+</html>
