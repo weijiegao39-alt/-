@@ -1,9 +1,0 @@
-{
-  "name": "TravelerOS 7.0 Practical",
-  "short_name": "TravelerOS7",
-  "start_url": "./index.html",
-  "display": "standalone",
-  "background_color": "#07111f",
-  "theme_color": "#07111f",
-  "icons": []
-}
