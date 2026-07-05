@@ -1,0 +1,9 @@
+{
+  "name": "TravelerOS 6.0 Mission Control",
+  "short_name": "TravelerOS",
+  "start_url": "./index.html",
+  "display": "standalone",
+  "background_color": "#07111f",
+  "theme_color": "#07111f",
+  "icons": []
+}
