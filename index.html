@@ -1,347 +1,218 @@
-window.TravelerRender = (() => {
-  const D = window.TravelerData;
-  const State = window.TravelerState;
-
-  let filter = "all";
-
-  function el(id) {
-    return document.getElementById(id);
-  }
-
-  function pct(value) {
-    return `${Math.max(0, Math.min(100, Math.round(value)))}%`;
-  }
-
-  function rarityClass(rarity) {
-    return `rarity-${rarity}`;
-  }
-
-  function showToast(text) {
-    const toast = el("toast");
-    toast.textContent = text;
-    toast.classList.add("show");
-    setTimeout(() => toast.classList.remove("show"), 2400);
-  }
-
-  function renderHome() {
-    const s = State.get();
-    const p = State.power();
-    const locks = State.permissions();
-    const dominant = dominantSet();
-    const portrait = portraitForSet(dominant);
-    if (el("homeHeroImg")) el("homeHeroImg").src = portrait;
-    el("homeStage").textContent = s.stage;
-    el("homeRp").textContent = `${s.rp} / ${s.rpMax}`;
-    el("homeSv").textContent = s.sv;
-    el("homeDebt").textContent = s.debt;
-    el("homeStability").textContent = p.stability;
-    el("homeResearch").textContent = p.research;
-    el("homeResist").textContent = p.resist;
-    el("homeMarket").textContent = p.market;
-    el("homeCharm").textContent = p.charm;
-    el("lineReality").style.width = pct(100 - s.debt);
-    el("lineFall").style.width = pct(s.sv + s.debt / 2);
-    el("permissionGrid").innerHTML = [
-      ["认识新女生", locks.girl], ["外食升级", locks.meal], ["AI娱乐", locks.ai],
-      ["电影/游戏", locks.movie], ["交易观察", locks.trade]
-    ].map(([name, value]) => `<div class="permission ${value.includes("锁") || value.includes("冻") ? "locked" : "open"}"><span>${name}</span><strong>${value}</strong></div>`).join("");
-  }
-
-  function renderRole() {
-    const s = State.get();
-    renderOutfit();
-    const slotBox = el("slotGrid");
-    slotBox.innerHTML = "";
-    D.slots.forEach(([slot, name]) => {
-      const item = D.items[s.equip[slot]];
-      const node = document.createElement("button");
-      node.className = "slot";
-      node.innerHTML = `
-        <span class="itemIcon ${rarityClass(item.rarity)}">${item.icon}</span>
-        <span class="slotText">
-          <small>${name}</small>
-          <strong>${item.name}</strong>
-          <em class="${rarityClass(item.rarity)}">${item.rarity}｜${item.set}</em>
-        </span>
-      `;
-      node.addEventListener("click", () => openEquip(slot));
-      slotBox.appendChild(node);
-    });
-
-    const sets = State.setCounts();
-    el("setBox").innerHTML = [
-      ["旅者", "2件：最低行动更稳；4件：稳定度额外提升"],
-      ["研究院", "2件：研究战力提升；4件：伪研究员额外掉血"],
-      ["夜潮", "2件：欲望抗性提升；4件：SV增长降低"],
-      ["纪律", "2件：投资纪律提升；4件：市场先生额外掉血"],
-      ["深渊", "2件：现实权限更容易解锁；4件：地图奖励提升"]
-    ].map(([name, effect]) => {
-      const count = sets[name] || 0;
-      return `<div class="set ${count >= 2 ? "active" : ""}"><strong>${name}套 · ${count}件</strong><span>${effect}</span></div>`;
-    }).join("");
-
-    const p = State.power();
-    el("powerSummary").innerHTML = [
-      ["研究战力", p.research], ["欲望抗性", p.resist], ["投资纪律", p.market], ["社交魅力", p.charm], ["稳定度", p.stability]
-    ].map(([name, value]) => `<div><span>${name}</span><strong>${value}</strong></div>`).join("");
-  }
-
-  function renderOutfit() {
-    const s = State.get();
-    const sets = State.setCounts();
-    const dominant = dominantSet();
-    const weapon = D.items[s.equip.weapon];
-    const chest = D.items[s.equip.chest];
-    const acc = D.items[s.equip.acc] || D.items[s.equip.ring];
-    const outfitNames = {
-      "旅者": "旅者初装",
-      "研究院": "灰烬研究装束",
-      "夜潮": "夜潮断欲装束",
-      "纪律": "冷钢风控装束",
-      "深渊": "深渊行者装束"
-    };
-    const outfitDesc = {
-      "旅者": "开局只装备基础旅者套，属性朴素，但能稳定启动最低行动。",
-      "研究院": "研究院装备强化输出、数据库和PPT推进，是二级市场研究主线的核心成长。",
-      "夜潮": "夜潮装备代表离屏、断欲、封存旧照片和削弱AI幻想入口。",
-      "纪律": "冷钢纪律装备绑定复盘、仓位约束和限制看盘，用来压制市场先生。",
-      "深渊": "深渊装备是高阶奖励，来自地图推进和Boss掉落，不会开局白送。"
-    };
-    el("outfitTitle").textContent = outfitNames[dominant] || "旅行者装束";
-    el("outfitDesc").textContent = outfitDesc[dominant] || "当前装束会随装备和套装变化。";
-    if (el("roleHeroImg")) el("roleHeroImg").src = portraitForSet(dominant);
-    const layer = layerForSet(dominant);
-    if (el("gearLayerImg")) {
-      el("gearLayerImg").src = layer;
-      el("gearLayerImg").classList.toggle("show", !!layer);
-    }
-    el("outfitAura").className = `outfitAura outfit-${dominant}`;
-    el("outfitBadges").innerHTML = [
-      ["武器", weapon?.name || "未装备"],
-      ["胸甲", chest?.name || "未装备"],
-      ["饰品", acc?.name || "未装备"],
-      ["主套装", `${dominant} ${sets[dominant] || 0}件`]
-    ].map(([k, v]) => `<span><small>${k}</small>${v}</span>`).join("");
-  }
-
-  function dominantSet() {
-    const sets = State.setCounts();
-    const advanced = Object.entries(sets).filter(([name, count]) => name !== "旅者" && count > 0);
-    if (advanced.length) return advanced.sort((a, b) => b[1] - a[1])[0][0];
-    return "旅者";
-  }
-
-  function portraitForSet(setName) {
-    return setName === "深渊" ? "assets/hero.png" : "assets/hero_starter.png";
-  }
-
-  function layerForSet(setName) {
-    return {
-      "研究院": "assets/layer_research.png",
-      "夜潮": "assets/layer_night.png",
-      "纪律": "assets/layer_discipline.png",
-      "深渊": "assets/layer_abyss.png"
-    }[setName] || "";
-  }
-
-  function openEquip(slot) {
-    const s = State.get();
-    const sheet = el("equipSheet");
-    const slotName = D.slots.find(([id]) => id === slot)?.[1] || slot;
-    const items = Object.values(D.items).filter(item => item.slot === slot);
-    sheet.innerHTML = `
-      <div class="sheetHead">
-        <h3>切换${slotName}</h3>
-        <button class="iconBtn" id="closeEquip" aria-label="关闭">×</button>
+﻿<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
+  <title>TravelerOS 22｜继续开发版</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="appShell">
+    <header class="topbar">
+      <div class="brand">
+        <h1>TravelerOS 22</h1>
+        <p>暗黑地下城RPG现实自律系统｜完整资源文件夹版</p>
       </div>
-      <div class="sheetList">
-        ${items.map(item => {
-          const owned = s.inventory.includes(item.id);
-          const equipped = s.equip[slot] === item.id;
-          return `<article class="gearRow ${owned ? "" : "locked"}">
-            <span class="itemIcon ${rarityClass(item.rarity)}">${item.icon}</span>
-            <div>
-              <strong>${item.name}</strong>
-              <small class="${rarityClass(item.rarity)}">${item.rarity}｜${item.set}｜来源：${item.source}</small>
-              <p>${item.meaning}</p>
+      <button class="primaryBtn" id="saveBtn">保存</button>
+    </header>
+
+    <main>
+      <section class="page is-active" id="page-home">
+        <div class="homeGrid">
+          <article class="panel heroPanel">
+            <img id="homeHeroImg" src="hero_starter.png" alt="旅行者主角立绘">
+            <div class="heroShade"></div>
+            <div class="heroInfo">
+              <h2>旅行者 · A7中枢城</h2>
+              <p>把研究、运动、离屏、复盘和现实权限绑定到同一套RPG成长系统里。</p>
             </div>
-            <button class="smallBtn" data-equip="${item.id}" ${owned ? "" : "disabled"}>${equipped ? "已装备" : owned ? "装备" : "未解锁"}</button>
-          </article>`;
-        }).join("")}
-      </div>`;
-    el("equipModal").classList.add("show");
-    el("closeEquip").addEventListener("click", closeEquip);
-    sheet.querySelectorAll("[data-equip]").forEach(btn => {
-      btn.addEventListener("click", () => {
-        State.equip(slot, btn.dataset.equip);
-        closeEquip();
-      });
-    });
-  }
+          </article>
 
-  function closeEquip() {
-    el("equipModal").classList.remove("show");
-  }
+          <div class="panel">
+            <h2 class="sectionTitle">主城状态</h2>
+            <div class="statGrid">
+              <div class="statBox"><span>阶位</span><strong id="homeStage">行者</strong></div>
+              <div class="statBox"><span>RP</span><strong id="homeRp">0 / 0</strong></div>
+              <div class="statBox"><span>SV 幻影值</span><strong id="homeSv">0</strong></div>
+              <div class="statBox"><span>现实债务</span><strong id="homeDebt">0</strong></div>
+              <div class="statBox"><span>稳定度</span><strong id="homeStability">0</strong></div>
+              <div class="statBox"><span>研究战力</span><strong id="homeResearch">0</strong></div>
+              <div class="statBox"><span>欲望抗性</span><strong id="homeResist">0</strong></div>
+              <div class="statBox"><span>投资纪律</span><strong id="homeMarket">0</strong></div>
+              <div class="statBox"><span>社交魅力</span><strong id="homeCharm">0</strong></div>
+            </div>
 
-  function renderInventory() {
-    const filters = [["all", "全部"], ...D.slots.map(([id, name]) => [id, name])];
-    el("gearFilter").innerHTML = filters.map(([id, name]) => `<button class="${filter === id ? "is-active" : ""}" data-filter="${id}">${name}</button>`).join("");
-    el("gearFilter").querySelectorAll("[data-filter]").forEach(btn => {
-      btn.addEventListener("click", () => {
-        filter = btn.dataset.filter;
-        renderInventory();
-      });
-    });
+            <div class="lines">
+              <div>
+                <div class="lineTitle"><span>现实线</span><span>行动与秩序</span></div>
+                <div class="bar reality"><span id="lineReality"></span></div>
+              </div>
+              <div>
+                <div class="lineTitle"><span>坠落线</span><span>SV + 债务</span></div>
+                <div class="bar fall"><span id="lineFall"></span></div>
+              </div>
+            </div>
+          </div>
 
-    const s = State.get();
-    const items = Object.values(D.items).filter(item => filter === "all" || item.slot === filter);
-    el("gearGrid").innerHTML = items.map(item => {
-      const owned = s.inventory.includes(item.id);
-      const equipped = s.equip[item.slot] === item.id;
-      const stats = Object.entries(item.stats).map(([k, v]) => `${statName(k)} +${v}`).join(" / ");
-      return `<article class="gearCard ${owned ? "" : "locked"}">
-        <div class="gearTop"><span class="itemIcon ${rarityClass(item.rarity)}">${item.icon}</span><div><strong>${item.name}</strong><small class="${rarityClass(item.rarity)}">${item.rarity}｜${item.set}</small></div></div>
-        <p>${item.meaning}</p>
-        <small>属性：${stats}</small>
-        <small>来源：${item.source}</small>
-        <button class="smallBtn" data-equip-card="${item.id}" ${owned ? "" : "disabled"}>${equipped ? "已装备" : owned ? "装备" : "未解锁"}</button>
-      </article>`;
-    }).join("");
-    el("gearGrid").querySelectorAll("[data-equip-card]").forEach(btn => {
-      btn.addEventListener("click", () => State.equip(D.items[btn.dataset.equipCard].slot, btn.dataset.equipCard));
-    });
-  }
+          <div class="panel rescueBox">
+            <h2 class="sectionTitle">懒惰急救</h2>
+            <button class="primaryBtn" id="rescueBtn">我现在什么都不想做</button>
+            <div class="rescueTask" id="rescueTask">点击后只给一个最低行动，不给宏大计划。</div>
+          </div>
 
-  function statName(key) {
-    return { research: "研究", resist: "抗性", market: "纪律", charm: "魅力", stability: "稳定" }[key] || key;
-  }
+          <div class="panel">
+            <h2 class="sectionTitle">现实权限</h2>
+            <div class="permissionGrid" id="permissionGrid"></div>
+          </div>
 
-  function renderDaily() {
-    const d = State.get().daily;
-    document.querySelectorAll("[data-daily]").forEach(input => {
-      if (document.activeElement !== input) input.value = d[input.dataset.daily] ?? "";
-    });
-  }
-
-  function renderBosses() {
-    const s = State.get();
-    el("bossList").innerHTML = D.bosses.map(b => {
-      const hp = s.bossHp[b.id];
-      return `<article class="bossCard talkCard" data-talk-type="boss" data-talk-id="${b.id}">
-        <img src="${b.image}" alt="${b.name}">
-        <div>
-          <div class="rowBetween"><h3>${b.name}</h3><strong>${Math.round(hp)} HP</strong></div>
-          <div class="hp"><span style="width:${pct(hp)}"></span></div>
-          <p>${b.problem}</p>
-          <small>回血：${b.heal}</small>
-          <small>掉血：${b.damage}</small>
-          <small>掉落：${b.drop}</small>
-          <button class="talkHint" type="button">交流</button>
+          <div class="panel">
+            <h2 class="sectionTitle">今日主线</h2>
+            <div class="taskList">
+              <div>燃气轮机数据库推进 90 分钟。</div>
+              <div>完成燃机产业链、供需或估值逻辑输出 300 字。</div>
+              <div>看盘不得替代研究；无复盘不开放交易观察。</div>
+              <div>欲望来袭时先离屏、洗脸、深蹲，再记录一句现实行动。</div>
+            </div>
+          </div>
         </div>
-      </article>`;
-    }).join("");
-    el("bossList").querySelectorAll("[data-talk-id]").forEach(card => {
-      card.addEventListener("click", () => openDialogue("boss", card.dataset.talkId));
-    });
-  }
+      </section>
 
-  function renderMap() {
-    const progress = State.get().mapProgress;
-    el("mapGrid").innerHTML = D.mapNodes.map(node => {
-      const value = progress[node.id] || 0;
-      return `<article class="mapNode">
-        <div class="mapOrb">${value}</div>
-        <h3>${node.name}</h3>
-        <p>${node.desc}</p>
-        <small>奖励：${node.reward}</small>
-        <div class="thinBar"><span style="width:${pct(value * 18)}"></span></div>
-      </article>`;
-    }).join("");
-  }
-
-  function renderNpcs() {
-    el("npcList").innerHTML = D.npcs.map(npc => `<article class="npcCard talkCard" data-talk-type="npc" data-talk-id="${npc.id}">
-      <img src="${npc.image}" alt="${npc.name}">
-      <div><h3>${npc.name}</h3><p>${npc.role}</p><small>${npc.offer}</small><button class="talkHint" type="button">交流</button></div>
-    </article>`).join("");
-    el("npcList").querySelectorAll("[data-talk-id]").forEach(card => {
-      card.addEventListener("click", () => openDialogue("npc", card.dataset.talkId));
-    });
-  }
-
-  function openDialogue(type, id) {
-    const source = type === "boss" ? D.bosses.find(x => x.id === id) : D.npcs.find(x => x.id === id);
-    if (!source) return;
-    const lines = source.dialogue || [source.offer || source.problem || "没有可用对话。"];
-    el("dialogueSheet").innerHTML = `
-      <div class="sheetHead">
-        <h3>${source.name}</h3>
-        <button class="iconBtn" id="closeDialogue" aria-label="关闭">×</button>
-      </div>
-      <div class="dialogueHero">
-        <img src="${source.image}" alt="${source.name}">
-        <div>
-          <strong>${type === "boss" ? "Boss交流" : "NPC委托"}</strong>
-          <span>${type === "boss" ? source.problem : source.role}</span>
+      <section class="page" id="page-role">
+        <div class="roleGrid">
+          <article class="panel heroPanel">
+            <img id="roleHeroImg" src="hero_starter.png" alt="角色完整立绘">
+            <img class="gearLayer" id="gearLayerImg" src="" alt="">
+            <div class="outfitAura" id="outfitAura"></div>
+            <div class="outfitBadges" id="outfitBadges"></div>
+            <div class="heroShade"></div>
+            <div class="heroInfo">
+              <h2 id="outfitTitle">角色页</h2>
+              <p id="outfitDesc">完整立绘、当前装备、套装效果和战力摘要同屏展示，默认装备已预装。</p>
+            </div>
+          </article>
+          <div class="panel">
+            <h2 class="sectionTitle">当前装备槽</h2>
+            <div class="slotGrid" id="slotGrid"></div>
+            <div class="powerSummary" id="powerSummary"></div>
+          </div>
+          <div class="panel">
+            <h2 class="sectionTitle">套装效果</h2>
+            <div class="setBox" id="setBox"></div>
+          </div>
         </div>
-      </div>
-      <div class="dialogueLines">
-        ${lines.map(line => `<p>${line}</p>`).join("")}
-      </div>
-      <div class="dialogueAdvice">${source.advice || source.offer || ""}</div>
-      <div class="dialogueActions">
-        <button class="primaryBtn" id="acceptDialogue">记入今日行动</button>
-        <button class="smallBtn" id="closeDialogue2">稍后处理</button>
-      </div>
-    `;
-    el("dialogueModal").classList.add("show");
-    el("closeDialogue").addEventListener("click", closeDialogue);
-    el("closeDialogue2").addEventListener("click", closeDialogue);
-    el("acceptDialogue").addEventListener("click", () => {
-      State.save(`${source.name}交流：${source.advice || source.offer || "已记录建议。"}`);
-      showToast("已记入系统日志");
-      closeDialogue();
-    });
-  }
+      </section>
 
-  function closeDialogue() {
-    el("dialogueModal").classList.remove("show");
-  }
+      <section class="page" id="page-gear">
+        <div class="panel">
+          <h2 class="sectionTitle">装备仓库</h2>
+          <div class="filterBar" id="gearFilter"></div>
+          <div class="gearGrid" id="gearGrid"></div>
+        </div>
+      </section>
 
-  function renderArchive() {
-    const s = State.get();
-    const records = s.archive.slice(0, 30);
-    el("archiveList").innerHTML = records.length ? records.map(r => `<article class="archiveItem">
-      <strong>${r.date}</strong>
-      <span>${r.summary}</span>
-      <small>RP ${signed(r.rp)} / SV ${signed(r.sv)} / 债务 ${signed(r.debt)} / 稳定 ${signed(r.stability)}</small>
-      ${r.drops.length ? `<small>掉落：${r.drops.map(id => D.items[id]?.name || id).join("、")}</small>` : ""}
-      ${r.note ? `<p>${r.note}</p>` : ""}
-    </article>`).join("") : `<div class="empty">还没有日报结算记录。</div>`;
-    el("logList").innerHTML = s.logs.slice(0, 40).map(x => `<div class="logItem">${x}</div>`).join("");
-  }
+      <section class="page" id="page-daily">
+        <div class="panel">
+          <h2 class="sectionTitle">日报结算</h2>
+          <div class="formGrid">
+            <div class="field"><label>地点</label><input data-daily="location"></div>
+            <div class="field"><label>天气</label><input data-daily="weather"></div>
+            <div class="field"><label>起床</label><input data-daily="wake" type="time"></div>
+            <div class="field"><label>睡眠</label><input data-daily="sleep" type="time"></div>
+            <div class="field"><label>护肤/形象</label><input data-daily="skincare" type="number" min="0" max="5"></div>
+            <div class="field"><label>研究分钟</label><input data-daily="researchMinutes" type="number" min="0"></div>
+            <div class="field"><label>输出字数</label><input data-daily="outputWords" type="number" min="0"></div>
+            <div class="field"><label>数据库推进</label><input data-daily="database" type="number" min="0" max="5"></div>
+            <div class="field"><label>PPT推进</label><input data-daily="ppt" type="number" min="0" max="5"></div>
+            <div class="field"><label>运动分钟</label><input data-daily="exerciseMinutes" type="number" min="0"></div>
+            <div class="field"><label>看盘小时</label><input data-daily="marketHours" type="number" min="0" step="0.5"></div>
+            <div class="field"><label>今日失守次数</label><input data-daily="deer" type="number" min="0"></div>
+            <div class="field"><label>AI幻想强度</label><input data-daily="aiFantasy" type="number" min="0" max="5"></div>
+            <div class="field"><label>旧照片/主页刺激</label><input data-daily="oldPhotos" type="number" min="0" max="5"></div>
+            <div class="field"><label>交易状态</label><input data-daily="tradeState"></div>
+            <div class="field"><label>体重</label><input data-daily="weight"></div>
+            <div class="field full"><label>备注</label><textarea data-daily="note"></textarea></div>
+          </div>
+          <div style="margin-top:12px">
+            <button class="primaryBtn" id="settleBtn">结算今日</button>
+          </div>
+        </div>
+      </section>
 
-  function signed(n) {
-    return `${n >= 0 ? "+" : ""}${n}`;
-  }
+      <section class="page" id="page-boss">
+        <div class="panel">
+          <h2 class="sectionTitle">Boss大厅</h2>
+          <div class="bossList" id="bossList"></div>
+        </div>
+      </section>
 
-  function renderAll() {
-    renderHome();
-    renderRole();
-    renderInventory();
-    renderDaily();
-    renderBosses();
-    renderMap();
-    renderNpcs();
-    renderArchive();
-  }
+      <section class="page" id="page-map">
+        <div class="panel">
+          <h2 class="sectionTitle">地图推进</h2>
+          <div class="mapGrid" id="mapGrid"></div>
+        </div>
+      </section>
 
-  function init() {
-    el("equipModal").addEventListener("click", e => { if (e.target.id === "equipModal") closeEquip(); });
-    el("dialogueModal").addEventListener("click", e => { if (e.target.id === "dialogueModal") closeDialogue(); });
-    document.addEventListener("traveler:changed", renderAll);
-    renderAll();
-  }
+      <section class="page" id="page-npc">
+        <div class="panel">
+          <h2 class="sectionTitle">NPC与神秘商人</h2>
+          <div class="npcList" id="npcList"></div>
+        </div>
+      </section>
 
-  return { init, renderAll, showToast };
-})();
+      <section class="page" id="page-archive">
+        <div class="panel">
+          <h2 class="sectionTitle">档案馆</h2>
+          <div class="archiveList" id="archiveList"></div>
+        </div>
+        <div class="panel" style="margin-top:12px">
+          <h2 class="sectionTitle">系统日志</h2>
+          <div class="logList" id="logList"></div>
+        </div>
+      </section>
+
+      <section class="page" id="page-settings">
+        <div class="panel">
+          <h2 class="sectionTitle">设置 / 导入导出</h2>
+          <textarea class="saveText" id="saveText" placeholder="导出的存档会出现在这里，也可以粘贴旧存档后导入。"></textarea>
+          <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:10px">
+            <button class="smallBtn" id="exportBtn">导出存档</button>
+            <button class="smallBtn" id="importBtn">导入存档</button>
+            <button class="dangerBtn" id="resetBtn">重置本地存档</button>
+          </div>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <nav class="bottomNav" aria-label="主导航">
+    <div class="bottomNavInner">
+      <button class="is-active" data-tab="home">主城</button>
+      <button data-tab="role">角色</button>
+      <button data-tab="gear">装备</button>
+      <button data-tab="daily">日报</button>
+      <button data-tab="boss">Boss</button>
+      <button data-tab="map">地图</button>
+      <button data-tab="npc">NPC</button>
+      <button data-tab="archive">档案</button>
+      <button data-tab="settings">设置</button>
+    </div>
+  </nav>
+
+  <div class="modal" id="equipModal">
+    <div class="sheet" id="equipSheet"></div>
+  </div>
+  <div class="modal" id="dialogueModal">
+    <div class="sheet" id="dialogueSheet"></div>
+  </div>
+  <div class="toast" id="toast"></div>
+
+  <script src="data.js"></script>
+  <script src="storage.js"></script>
+  <script src="state.js"></script>
+  <script src="render.js"></script>
+  <script src="actions.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
+
+
