@@ -23,13 +23,31 @@
     setTimeout(() => toast.classList.remove("show"), 2400);
   }
 
+  function assetSrc(src) {
+    return src || "";
+  }
+
+  function fallbackSrc(src) {
+    if (!src) return "";
+    return src.includes("/") ? src.split("/").pop() : `assets/${src}`;
+  }
+
+  function setImage(img, src) {
+    img.onerror = () => {
+      img.onerror = null;
+      const fallback = fallbackSrc(src);
+      if (fallback && fallback !== src) img.src = fallback;
+    };
+    img.src = src || "";
+  }
+
   function renderHome() {
     const s = State.get();
     const p = State.power();
     const locks = State.permissions();
     const dominant = dominantSet();
     const portrait = portraitForSet(dominant);
-    if (el("homeHeroImg")) el("homeHeroImg").src = portrait;
+    if (el("homeHeroImg")) setImage(el("homeHeroImg"), portrait);
     el("homeStage").textContent = s.stage;
     el("homeRp").textContent = `${s.rp} / ${s.rpMax}`;
     el("homeSv").textContent = s.sv;
@@ -109,10 +127,10 @@
     };
     el("outfitTitle").textContent = outfitNames[dominant] || "旅行者装束";
     el("outfitDesc").textContent = outfitDesc[dominant] || "当前装束会随装备和套装变化。";
-    if (el("roleHeroImg")) el("roleHeroImg").src = portraitForSet(dominant);
+    if (el("roleHeroImg")) setImage(el("roleHeroImg"), portraitForSet(dominant));
     const layer = layerForSet(dominant);
     if (el("gearLayerImg")) {
-      el("gearLayerImg").src = layer;
+      setImage(el("gearLayerImg"), layer);
       el("gearLayerImg").classList.toggle("show", !!layer);
     }
     el("outfitAura").className = `outfitAura outfit-${dominant}`;
@@ -228,7 +246,7 @@
     el("bossList").innerHTML = D.bosses.map(b => {
       const hp = s.bossHp[b.id];
       return `<article class="bossCard talkCard" data-talk-type="boss" data-talk-id="${b.id}">
-        <img src="${b.image}" alt="${b.name}">
+        <img src="${assetSrc(b.image)}" onerror="this.onerror=null;this.src='${fallbackSrc(b.image)}'" alt="${b.name}">
         <div>
           <div class="rowBetween"><h3>${b.name}</h3><strong>${Math.round(hp)} HP</strong></div>
           <div class="hp"><span style="width:${pct(hp)}"></span></div>
@@ -261,7 +279,7 @@
 
   function renderNpcs() {
     el("npcList").innerHTML = D.npcs.map(npc => `<article class="npcCard talkCard" data-talk-type="npc" data-talk-id="${npc.id}">
-      <img src="${npc.image}" alt="${npc.name}">
+      <img src="${assetSrc(npc.image)}" onerror="this.onerror=null;this.src='${fallbackSrc(npc.image)}'" alt="${npc.name}">
       <div><h3>${npc.name}</h3><p>${npc.role}</p><small>${npc.offer}</small><button class="talkHint" type="button">交流</button></div>
     </article>`).join("");
     el("npcList").querySelectorAll("[data-talk-id]").forEach(card => {
@@ -279,7 +297,7 @@
         <button class="iconBtn" id="closeDialogue" aria-label="关闭">×</button>
       </div>
       <div class="dialogueHero">
-        <img src="${source.image}" alt="${source.name}">
+        <img src="${assetSrc(source.image)}" onerror="this.onerror=null;this.src='${fallbackSrc(source.image)}'" alt="${source.name}">
         <div>
           <strong>${type === "boss" ? "Boss交流" : "NPC委托"}</strong>
           <span>${type === "boss" ? source.problem : source.role}</span>
